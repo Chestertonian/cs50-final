@@ -1,0 +1,26 @@
+Outside Ruined Monastery
+exits: 
+
+Ruined Monastery Scriptorium
+This is the scriptorium of the ruined monastery.
+exits: east
+
+Ruined Monastery Corridor
+The stone hallway...
+exits: north, west, south
+
+Ruined Monastery Corridor
+The hallway turns here...
+exits: south, east 
+
+Ruined Monastery Corridor
+The hallway continues; northwards, an office can be seen.
+exits: west, north, east
+
+Abbot's Office
+This office has been thoroughly ransacked.
+exits: south
+
+Blocked Monastery Corridor
+The hallway has collapsed, and further progress to the east is impossible. Your only choice is to return.
+exits: west
