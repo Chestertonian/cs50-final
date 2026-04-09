@@ -8,7 +8,7 @@ in this project, i hope to create a simple text-based adventure game. i want to 
 - 'drop'
 - 'inventory'
 - 'look'
-- 'help'
+- 'help' (basic explanation)
 
 further features that i may add, ranked by priority:
 - combat (health points)
