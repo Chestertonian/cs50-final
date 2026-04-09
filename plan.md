@@ -2,7 +2,7 @@
 for my cs50 final project
 
 ### intention
-in this project, i hope to create a simple text-based adventure game. i want to give it the functionality for the following commands:
+in this project, i hope to create a simple text-based fantasy adventure game. i want to give it the functionality for the following commands:
 - movement in each of the compass directions, plus up and down ('north', 'east', 'south', 'west', 'up', 'down')
 - 'get'
 - 'drop'
@@ -16,3 +16,4 @@ further features that i may add, ranked by priority:
 - doors which can be 'open'ed and 'close'd
 - account creation, storage, persistence from play to play
 - interaction with friendly characters in-game (and thus, quests)
+- classes
