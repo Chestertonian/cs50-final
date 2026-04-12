@@ -1,0 +1,69 @@
+-- CS50 Game Schema
+
+
+-- Rooms table for game world
+CREATE TABLE IF NOT EXISTS rooms (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name TEXT NOT NULL,
+	description TEXT NOT NULL,
+	lighting INTEGER NOT NULL DEFAULT 1,
+	smell TEXT NOT NULL DEFAULT '' ,
+	sound TEXT NOT NULL DEFAULT '',
+	area TEXT NOT NULL DEFAULT 'city',
+	movement_cost INTEGER DEFAULT 3,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Exits table for connecting rooms
+CREATE TABLE IF NOT EXISTS exits (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	room_id INTEGER NOT NULL,
+	direction TEXT NOT NULL,
+	destination_room_id INTEGER NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	secret INTEGER NOT NULL DEFAULT 0,
+	locked INTEGER NOT NULL DEFAULT 0,
+	FOREIGN KEY (room_id) REFERENCES rooms(id),
+	FOREIGN KEY (destination_room_id) REFERENCES rooms(id),
+	UNIQUE(room_id, direction)
+
+-- Table for player characters.
+CREATE TABLE IF NOT EXISTS players (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name TEXT NOT NULL UNIQUE,
+	race TEXT NOT NULL DEFAULT 'human',
+	class TEXT NOT NULL DEFAULT 'warrior',
+	gender INTEGER NOT NULL,
+	save_name TEXT NOT NULL UNIQUE,
+	current_room_id INTEGER NOT NULL DEFAULT 1,
+	health INTEGER NOT NULL DEFAULT 25,
+	max_health INTEGER NOT NULL DEFAULT 25,
+	experience INTEGER NOT NULL DEFAULT 0,
+	level INTEGER NOT NULL DEFAULT 1,
+	int INTEGER NOT NULL,
+	wis INTEGER NOT NULL,
+	dex INTEGER NOT NULL,
+	cha INTEGER NOT NULL,
+	con INTEGER NOT NULL,
+	str INTEGER NOT NULL,
+	traits TEXT NOT NULL DEFAULT '',
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (current_room_id) REFERENCES rooms(id)
+);
+ 
+
+-- Table for non-player characters.
+CREATE TABLE IF NOT EXISTS npcs (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name TEXT NOT NULL, 
+	description TEXT NOT NULL,
+	room_id INTEGER NOT NULL,
+	health INTEGER NOT NULL DEFAULT 25,
+	max_health INTEGER NOT NULL DEFAULT 25,
+	dialogue TEXT DEFAULT '',
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (room_id) REFERENCES rooms(id)
+);
+
+

@@ -1,4 +1,4 @@
-# mud_game/game/engine.py
+# game/engine.py
 class GameEngine:
     """Core game engine responsible for running the main loop."""
 
@@ -45,4 +45,3 @@ class GameEngine:
         """Display output to the player."""
         if output:
             print(output)
-

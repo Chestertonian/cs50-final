@@ -1,0 +1,22 @@
+============================================================
+                ===[GUILDS OF THE WORLD]===
+
+(1) Warrior: Champion of sword and shield, the warrior relies 
+             on physical prowess to withstand enemies and 
+             deliver crushing strikes, excelling in melee.
+(2) Cleric:  Gifted with powers by the gods, the cleric 
+             excels in channeling holy might to struggle 
+             against evil.
+(3) Rogue:   Masters of stealth, the rogue thrives in 
+             mystery, dancing through battle with deadly
+             precision.
+(4) Wizard:  Harnessing elemental power, the wizard uses 
+             magical arts to strike from a distance, though
+             they themselves are often weak in hand-to-hand.
+(5) Ranger:  Stalking the wilds on the edge of civilization,
+             rangers are the ultimate survivalists, often 
+             braving treacherous terrain and deadly beasts.
+============================================================
+
+Input a number:
+> 

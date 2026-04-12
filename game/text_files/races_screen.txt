@@ -1,0 +1,17 @@
+============================================================
+                ===[RACES OF THE WORLD]===
+
+(1) Human: A versatile, diverse, and populous people. Found
+           nearly everywhere in the world of Kaelos.
+(2) Dwarf: Stocky and strong folk of the mountains, notable
+           for producing warriors, clerics and stonemasons.
+(3) Elf:   Mysterious and ancient race, known to many as the
+           Firstborn; they are graceful, yet often austere.
+(4) Gnome: Merry tinkerers of unusually small stature, known
+           for baking, poetry, and enjoying the good life.
+(5) Centaur: Wise and noble beings; half-horse and half-man,
+           they are often found in forests and in the wild.
+============================================================
+
+Input a number:
+> 
