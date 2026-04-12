@@ -1,6 +1,8 @@
-# Lots more to do here. This is where code surrounding login, registration, etc. will live.
+# This is where code calling for login, registration, etc. will live.
 from game.character_creation import create_character
-
+from game.login import login_screen 
+import game.helpers
+db=game.helpers.get_db()
 
 def main_menu():
     """Display login/register menu."""
@@ -12,10 +14,11 @@ def main_menu():
         choice = input("Choose an option (1-3): ").strip()
 
         if choice == "1":
-            pass
-            # Someday, this will call login_screen()
+            login_screen(db)
+            
         elif choice == "2":
-            create_character()
+            create_character(db)
+            
         elif choice == "3":
             print("Goodbye!")
             break

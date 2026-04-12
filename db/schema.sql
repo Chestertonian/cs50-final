@@ -26,26 +26,28 @@ CREATE TABLE IF NOT EXISTS exits (
 	FOREIGN KEY (room_id) REFERENCES rooms(id),
 	FOREIGN KEY (destination_room_id) REFERENCES rooms(id),
 	UNIQUE(room_id, direction)
+);
 
--- Table for player characters.
+-- Table for player characters
 CREATE TABLE IF NOT EXISTS players (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name TEXT NOT NULL UNIQUE,
+	password TEXT NOT NULL,
 	race TEXT NOT NULL DEFAULT 'human',
-	class TEXT NOT NULL DEFAULT 'warrior',
+	guild TEXT NOT NULL DEFAULT 'warrior',
 	gender INTEGER NOT NULL,
-	save_name TEXT NOT NULL UNIQUE,
+	save_name TEXT UNIQUE,
 	current_room_id INTEGER NOT NULL DEFAULT 1,
 	health INTEGER NOT NULL DEFAULT 25,
 	max_health INTEGER NOT NULL DEFAULT 25,
 	experience INTEGER NOT NULL DEFAULT 0,
 	level INTEGER NOT NULL DEFAULT 1,
-	int INTEGER NOT NULL,
-	wis INTEGER NOT NULL,
-	dex INTEGER NOT NULL,
-	cha INTEGER NOT NULL,
-	con INTEGER NOT NULL,
-	str INTEGER NOT NULL,
+	int_stat INTEGER NOT NULL,
+	wis_stat INTEGER NOT NULL,
+	dex_stat INTEGER NOT NULL,
+	cha_stat INTEGER NOT NULL,
+	con_stat INTEGER NOT NULL,
+	str_stat INTEGER NOT NULL,
 	traits TEXT NOT NULL DEFAULT '',
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

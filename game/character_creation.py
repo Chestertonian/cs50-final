@@ -1,26 +1,58 @@
 import game.stats
+import hashlib
 
 
-def create_character():
+
+def create_character(db):
     print()
     print("Welcome to character creation!")
 
     # Step 1: username
     while True:
         print()
-        username = input("First, pick your name, adventurer.\n> ").strip().capitalize()
+        username = (
+            input("By what name will you be known, adventurer?\n> ")
+            .strip()
+            .capitalize()
+            .replace(" ", "")
+            .encode("ascii", "ignore")
+            .decode()
+        )
+        if len(username) > 25:
+            print("\nYour name is far too long.")
+            continue
+        if len(username) < 3:
+            print("\nYour name is too short.")
+            continue
+        if not username.strip().isalpha():
+            print("\nUsername must contain only letters.")
+            continue
+        existing = db.execute("SELECT 1 FROM players WHERE name = ? LIMIT 1", (username,)).fetchone()
+        if existing:
+            print("\nThat name is already taken.")
+            continue
         if username:
             print()
-            print(f"Your name shall be {username}.")
+            print(f"\nYour name shall be {username}.")
             break
-        # Additionally, check if username matches any other username, or in any way does not fit with naming standards.
         print()
         print("\nInvalid response. Please try again.\n")
 
     # Step 2: password
     while True:
         print()
-        password = input(f"\nWhat shall your password be, {username}?\n> ").strip()
+        password = (
+            input(f"\nWhat shall your password be, {username}?\n> ")
+            .strip()
+            .encode("ascii", "ignore")
+            .decode()
+        )
+        if len(password) > 25:
+            print("\nYour password is far too long.")
+            continue
+        if len(password) < 3:
+            print("\nYour password is too short.")
+            continue
         if not password:
             print()
             print("\nPassword cannot be empty. Please try again.\n")
@@ -30,6 +62,7 @@ def create_character():
         if confirmation == password:
             print()
             print("\nYou may proceed.\n")
+            encrypted_password = hashlib.sha256(password.encode()).hexdigest()
             break
         print()
         print("\nPasswords did not match. Please try again.\n")
@@ -38,7 +71,7 @@ def create_character():
     while True:
         print()
         gender = input("'Male' or 'female'?\n> ").strip().capitalize()
-        if gender.strip().capitalize() not in ['Male','Female']:
+        if gender.strip().capitalize() not in ["Male", "Female"]:
             continue
         if gender:
             print()
@@ -60,7 +93,7 @@ def create_character():
         except ValueError:
             print("Input a number.")
             continue
-        if not 0 < int(num_chosen) < len(race_list):
+        if not 0 < int(num_chosen) < len(race_list) + 1:
             print("Input a valid number.")
             continue
         race = race_list[int(num_chosen) - 1]
@@ -78,15 +111,39 @@ def create_character():
             guild_text = guilds.read()
         print()
         num_chosen = input(guild_text)
+        try:
+            int(num_chosen)
+        except ValueError:
+            print("Input a valid number.")
+            continue
+        if not 0 < int(num_chosen) < len(guild_list) + 1:
+            print("Input a valid number.")
+            continue
         guild = guild_list[int(num_chosen) - 1]
         if guild:
             print()
-            print(f"You shall be a {guild.capitalize()}.")
+            print(f"You shall be a {race.capitalize()} {guild.capitalize()}.")
             break
         print()
         print("\nNot a guild! Please try again.\n")
 
     # Step 6: roll stats.
-    game.stats.assign_stats()
+    stat_array = game.stats.assign_stats()
 
-    # Step 7:
+    db.execute(
+        "INSERT INTO players (name, password, gender, race, guild, str_stat, dex_stat, con_stat, int_stat, wis_stat, cha_stat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        (
+            username,
+            encrypted_password,
+            gender,
+            race,
+            guild,
+            stat_array["STR"],
+            stat_array["DEX"],
+            stat_array["CON"],
+            stat_array["INT"],
+            stat_array["WIS"],
+            stat_array["CHA"],
+        ),
+    )
+    db.commit()
