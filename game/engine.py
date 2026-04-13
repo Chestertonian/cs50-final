@@ -1,6 +1,9 @@
 # game/engine.py
 from game.models import Player, Room
 from game.commands.look import LookCommand
+from game.commands.save import SaveCommand
+from game.commands.score import ScoreCommand
+from game.commands.time import TimeCommand
 # from game.commands.move import MoveCommand
 # from game.commands.help import HelpCommand
 
@@ -15,6 +18,9 @@ class GameEngine:
         self.is_running = True
         self.commands = {
             "look": LookCommand(),
+            "save": SaveCommand(),
+            "score": ScoreCommand(),
+            "time": TimeCommand()
             # "help": HelpCommand(),
         }
 
@@ -38,6 +44,7 @@ class GameEngine:
 
     def _process_input(self, user_input):
         # Check if it's null (like always!)
+        user_input=user_input.lower()
         if not user_input:
             return ">"
         # Turn user input into a command, with arguments.
