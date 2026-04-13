@@ -1,0 +1,13 @@
+Changelog:
+
+April 11, 2026: Created some initial schemas and began to build the project's architecture.
+April 12, 2026: 
+	-- Built a fully functioning account/login/register system (as far as was tested, no bugs found.) 
+	-- "Models.py" -- This is a key file and creates a lot of the structure for the game.
+	-- First ~20 rooms built, and three test characters created: PasswordJack, PasswordJill, and Tester007.
+	-- Data in all of the SQL tables now.
+	-- Connecting databases, etc.
+	-- ~11:02 EST, the first citizen walked the streets of Thornheim: the ill-named Spam the Human Warrior. (Spam)
+
+
+(Tomorrow: Character sheet, help, terminal formatting, maybe inventory.)

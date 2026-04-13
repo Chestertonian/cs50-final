@@ -41,6 +41,7 @@ def login_screen(db):
         ).fetchone()
         if login_check:
             print("Enter the realms.")
+            return username
             
         else:
             print(f"Failed login. {3-failed_logins} attempts remaining.")

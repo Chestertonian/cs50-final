@@ -1,5 +1,5 @@
 # models.py, home to the loading, representation, and saving of various game entities. The purpose of this is to avoid constant raw SQL queries in the code later.
-
+from game.helpers import wrap_text
 
 class Room:
     def __init__(self, row):
@@ -27,10 +27,12 @@ class Room:
     def describe(self, db):
         exits = self.get_exits(db)
         exit_list = ", ".join([row["direction"] for row in exits]) or "none"
+        wrapped_description = wrap_text(self.description)
         return (
             f"\n{self.name}\n"
             f"{'-' * len(self.name)}\n"
-            f"{self.description}\n"
+            "\n"
+            f"{wrapped_description}\n"
             f"\nExits: {exit_list}\n"
         )
 
@@ -86,11 +88,20 @@ class Player:
             cha_stat = ?, traits = ?, updated_at = CURRENT_TIMESTAMP
             WHERE id = ?""",
             (
-                self.current_room_id, self.health, self.max_health,
-                self.level, self.experience, self.stats["STR"],
-                self.stats["CON"], self.stats["DEX"], self.stats["INT"],
-                self.stats["WIS"], self.stats["CHA"], self.traits, self.id
-            )
+                self.current_room_id,
+                self.health,
+                self.max_health,
+                self.level,
+                self.experience,
+                self.stats["STR"],
+                self.stats["CON"],
+                self.stats["DEX"],
+                self.stats["INT"],
+                self.stats["WIS"],
+                self.stats["CHA"],
+                self.traits,
+                self.id,
+            ),
         )
         db.commit()
 
