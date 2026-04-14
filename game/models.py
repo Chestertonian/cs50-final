@@ -23,9 +23,16 @@ class Room:
             (self.id,),
         ).fetchall()
         return rows
+    
+    def get_visible_exits(self, db):
+        rows = db.execute(
+            "SELECT direction, destination_room_id FROM exits WHERE room_id = ? AND secret=0;",
+            (self.id,),
+        ).fetchall()
+        return rows
 
     def describe(self, db):
-        exits = self.get_exits(db)
+        exits = self.get_visible_exits(db)
         exit_list = ", ".join([row["direction"] for row in exits]) or "none"
         wrapped_description = wrap_text(self.description)
         return (
@@ -66,7 +73,7 @@ class Player:
 
     def move(self, db, direction):
         row = db.execute(
-            "SELECT * FROM exits WHERE direction = ? AND room_id = ?",
+            "SELECT * FROM exits WHERE direction = ? AND room_id = ? AND locked = 0",
             (direction, self.current_room_id),
         ).fetchone()
         if row:
@@ -78,6 +85,8 @@ class Player:
             db.commit()
             return True
         else:
+            if db.execute("SELECT * FROM exits WHERE direction = ? AND room_id = ? AND locked = 1", (direction, self.current_room_id),).fetchone():
+                print("The door is locked.")
             return False
 
     def save(self, db):

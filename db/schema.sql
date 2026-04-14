@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS rooms (
 	lighting INTEGER NOT NULL DEFAULT 1,
 	smell TEXT NOT NULL DEFAULT '' ,
 	sound TEXT NOT NULL DEFAULT '',
-	area TEXT NOT NULL DEFAULT 'city',
+	area TEXT NOT NULL DEFAULT 'Thornheim',
 	movement_cost INTEGER DEFAULT 3,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS item_locations (
     )
 );
 
--- Only torches currently need per-instance state (can be lit or doused)
+-- Only torches currently need per-instance state (can be lit or doused). Other things that will at some point will probably be consumable items with charges.
 CREATE TABLE IF NOT EXISTS item_torch_instances (
     instance_id INTEGER PRIMARY KEY,
     burn_time INTEGER NOT NULL DEFAULT 100,

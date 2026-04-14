@@ -129,6 +129,17 @@ def create_character(db):
 
     # Step 6: roll stats.
     stat_array = game.stats.assign_stats()
+    
+    # Step 7: Add racial bonuses for each stat.
+    stat_bonus={"human": ('str', 1, 'cha', 1),
+                "dwarf": ('str', 1, 'con', 1),
+                "elf": ('dex', 1, 'int', 1),
+                "gnome": ('cha', 1, 'int', 1),
+                "centaur": ('wis', 1, 'con', 1)
+                }
+    stat_array[stat_bonus[race][0].upper()]+=stat_bonus[race][1]
+    stat_array[stat_bonus[race][2].upper()]+=stat_bonus[race][3]
+    
 
     db.execute(
         "INSERT INTO players (name, password, gender, race, guild, str_stat, dex_stat, con_stat, int_stat, wis_stat, cha_stat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",

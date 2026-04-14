@@ -36,7 +36,7 @@ April 13, 2026:
 
 - Added "score" function.
 
-- Added time function, with different messages for day and night. --> Last backup
+- Added time function, with different messages for day and night.
 
 - Added two senses.
 
@@ -50,6 +50,8 @@ April 14, 2026:
 
 - More work on Perilous Caverns area.
 
-- Created schemas for NPCs and items, utilizing templates and instances of those templates.
+- Created schemas for NPCs and items, utilizing templates and instances of those templates. (The first template was the Goblin Chef.) --> Last backup
 
-- Worked on racial modifiers to statistics.
+- Worked on racial modifiers to statistics. 
+
+- Implemented locked doors and secret doors.
