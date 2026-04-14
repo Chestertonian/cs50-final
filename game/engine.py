@@ -4,8 +4,9 @@ from game.commands.look import LookCommand
 from game.commands.save import SaveCommand
 from game.commands.score import ScoreCommand
 from game.commands.time import TimeCommand
-# from game.commands.move import MoveCommand
-# from game.commands.help import HelpCommand
+from game.commands.smell import SmellCommand
+from game.commands.listen import ListenCommand
+from game.commands.help import HelpCommand
 
 
 class GameEngine:
@@ -20,8 +21,10 @@ class GameEngine:
             "look": LookCommand(),
             "save": SaveCommand(),
             "score": ScoreCommand(),
-            "time": TimeCommand()
-            # "help": HelpCommand(),
+            "time": TimeCommand(),
+            "smell": SmellCommand(),
+            "listen": ListenCommand(),
+            "help": HelpCommand()
         }
 
     def run(self):

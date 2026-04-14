@@ -1,0 +1,9 @@
+Syntax:   
+
+'look,' 'look <object>' (Not yet implemented.)
+
+------------------------------------
+
+This command can be used to observe the room that the user is currently in.
+
+Related files: senses.

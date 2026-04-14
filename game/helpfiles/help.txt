@@ -1,0 +1,9 @@
+Syntax: 
+
+'help,' 'help movement'
+
+------------------------------------
+
+This command can be used to get help on a topic. When used without arguments, it will return a list of helpfiles.
+
+Related files: lore.

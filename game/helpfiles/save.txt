@@ -1,0 +1,9 @@
+Syntax: 
+
+'save'
+
+------------------------------------
+
+Saves your character (the game will automatically do this, so it's primarily for redundancy's sake).
+
+Related files: inventory.

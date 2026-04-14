@@ -1,0 +1,9 @@
+Syntax: 
+
+'score'
+
+------------------------------------
+
+This command can be used to observe information about the user.
+
+Related files: level, inventory, guild, race, health.

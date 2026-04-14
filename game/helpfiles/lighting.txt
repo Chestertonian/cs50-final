@@ -1,0 +1,9 @@
+Syntax: 
+
+'light torch' (CURRENTLY, UNAVAILABLE)
+
+------------------------------------
+
+By default, most rooms will be illuminated during the day and dark during the night. Carrying a torch can significantly improve your chances of survival!
+
+Related files: time, inventory.

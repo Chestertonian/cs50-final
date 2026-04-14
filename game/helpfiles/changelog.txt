@@ -1,0 +1,55 @@
+Changelog:
+
+
+
+April 11, 2026: 
+
+- Created some initial schemas and began to build the project's architecture.
+
+
+
+April 12, 2026: 
+
+- Built a fully functioning account/login/register system (as far as was tested, no bugs found.) 
+
+- "Models.py" -- This is a key file and creates a lot of the structure for the game.
+
+- First ~20 rooms built, and three test characters created: PasswordJack, PasswordJill, and Tester007.
+
+- Data in all of the SQL tables now.
+
+- Connecting databases, etc.
+
+- Built engine, movement, look, base. Game architecture is moderately functional now.
+
+- ~11:02 EST, the first citizen walked the streets of Thornheim: the ill-named Spam the Human Warrior. (Spam)
+
+
+
+April 13, 2026:
+
+- Expanded East Forest, began Perilous Caverns.
+
+- Add "save" function.
+
+- Improved some formatting.
+
+- Added "score" function.
+
+- Added time function, with different messages for day and night. --> Last backup
+
+- Added two senses.
+
+- Added helpfiles.
+
+- Built Perilous Caverns.
+
+
+
+April 14, 2026:
+
+- More work on Perilous Caverns area.
+
+- Created schemas for NPCs and items, utilizing templates and instances of those templates.
+
+- Worked on racial modifiers to statistics.

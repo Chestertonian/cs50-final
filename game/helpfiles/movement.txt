@@ -1,0 +1,9 @@
+Syntax: 
+
+'north,' 'east,' 'window'
+
+------------------------------------
+
+This command can be used to observe the room that the user is currently in.
+
+Related files: room.

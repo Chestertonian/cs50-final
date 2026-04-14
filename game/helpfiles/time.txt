@@ -1,0 +1,9 @@
+Syntax: 
+
+'time'
+
+------------------------------------
+
+This command displays the time, which has certain in-game consequences. The game runs off real-world time.
+
+Related files: lighting.
