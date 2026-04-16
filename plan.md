@@ -1,24 +1,25 @@
 # cs50-final
 
-for my cs50 final project
+For my cs50 final project
 
 ### intention
 
-in this project, i hope to create a simple text-based fantasy adventure game. i want to give it the functionality for the following commands:
+In this project, I am creating a text-based fantasy adventure game. I want to give it the functionality for the following commands/features.
 
-* movement in each of the compass directions, plus up and down ('north', 'east', 'south', 'west', 'up', 'down')
-* 'get'
-* 'drop'
-* 'inventory'
-* 'look'
-* 'help' (basic explanation)
-* account creation, storage, persistence from play to play
+Added Already
+* Functionality for movement and rooms, each with description, smell, sound, etc.
+* Under this, locked and secret doors.
+* Look command
+* Character creation, login, and persistence from play to play. 
+
+Immediate Goals To add
+* Items system.
 
 
 
 further features that i may add, ranked by priority:
 
-* combat (health points)
+* combat (health points, etc, attacks)
 * movement points (so you can't run across the map without paying a cost)
 * doors which can be 'open'ed and 'close'd
 * interaction with friendly characters in-game (and thus, quests)
