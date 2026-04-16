@@ -108,6 +108,7 @@ CREATE TABLE IF NOT EXISTS item_weapon_templates (
     template_id INTEGER PRIMARY KEY,
     damage_min INTEGER NOT NULL DEFAULT 1,
     damage_max INTEGER NOT NULL DEFAULT 4,
+    damage_type TEXT NOT NULL DEFAULT 'pierce',
     weapon_type TEXT NOT NULL DEFAULT 'melee',
     FOREIGN KEY (template_id) REFERENCES item_templates(id)
 );
@@ -116,6 +117,7 @@ CREATE TABLE IF NOT EXISTS item_armor_templates (
     template_id INTEGER PRIMARY KEY,
     defense INTEGER NOT NULL DEFAULT 1,
     armor_slot TEXT NOT NULL,         -- 'head', 'body', 'hands', 'feet'
+    dex_penalty INT NOT NULL DEFAULT 0,
     FOREIGN KEY (template_id) REFERENCES item_templates(id)
 );
 
@@ -158,10 +160,10 @@ CREATE TABLE IF NOT EXISTS item_locations (
     FOREIGN KEY (instance_id) REFERENCES item_instances(id),
     FOREIGN KEY (room_id) REFERENCES rooms(id),
     FOREIGN KEY (player_id) REFERENCES players(id),
-    FOREIGN KEY (npc_id) REFERENCES npcs(id),
+    FOREIGN KEY (npc_id) REFERENCES npc_instances(id),
     CHECK (
         (room_id IS NOT NULL AND npc_id IS NULL AND player_id IS NULL) OR
-        (room_id IS NULL AND npc_id IS NULL AND player_id IS NOT NULL)
+        (room_id IS NULL AND npc_id IS NULL AND player_id IS NOT NULL) OR
 	(room_id IS NULL AND npc_id IS NOT NULL AND player_id IS NULL)
     )
 );

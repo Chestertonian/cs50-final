@@ -24,7 +24,15 @@ class GameEngine:
             "time": TimeCommand(),
             "smell": SmellCommand(),
             "listen": ListenCommand(),
-            "help": HelpCommand()
+            "help": HelpCommand(),
+        }
+        self.direction_aliases = {
+            "n": "north",
+            "s": "south",
+            "e": "east",
+            "w": "west",
+            "u": "up",
+            "d": "down",
         }
 
     def run(self):
@@ -47,13 +55,15 @@ class GameEngine:
 
     def _process_input(self, user_input):
         # Check if it's null (like always!)
-        user_input=user_input.lower()
+        user_input = user_input.lower()
         if not user_input:
             return ">"
         # Turn user input into a command, with arguments.
         input_list = user_input.split()
         command = input_list[0]
         args = input_list[1:]
+        # Alias directions.
+        command = self.direction_aliases.get(command, command)
         # Did the user quit?
         if command == "quit":
             self.quit()
@@ -74,7 +84,7 @@ class GameEngine:
                 return "You can't go that way."
 
         # TODO: room special commands
-        # not implemented yet. an example of this might be "dig" in a room where there's treasure to be found for the digging. 
+        # not implemented yet. an example of this might be "dig" in a room where there's treasure to be found for the digging.
 
         return "Unknown command."
 

@@ -50,8 +50,24 @@ April 14, 2026:
 
 - More work on Perilous Caverns area.
 
-- Created schemas for NPCs and items, utilizing templates and instances of those templates. (The first template was the Goblin Chef.) --> Last backup
+- Created schemas for NPCs and items, utilizing templates and instances of those templates. (The first template was the Goblin Chef.) Added spawn table.
 
-- Worked on racial modifiers to statistics. 
+- Added racial modifiers to statistics. 
 
-- Implemented locked doors and secret doors.
+- Implemented locked doors and secret doors. -- Backup
+
+
+
+April 15, 2026:
+
+- More work on items.
+
+
+
+April 16, 2026:
+
+- Items nearly finished, a few hundred lines of code.
+
+- Second level of Perilous Caverns.
+
+- Alias support for movement. 
