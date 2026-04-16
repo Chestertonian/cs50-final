@@ -1,12 +1,16 @@
 # game/engine.py
-from game.models import Player, Room
-from game.commands.look import LookCommand
-from game.commands.save import SaveCommand
-from game.commands.score import ScoreCommand
-from game.commands.time import TimeCommand
-from game.commands.smell import SmellCommand
-from game.commands.listen import ListenCommand
-from game.commands.help import HelpCommand
+from game.models import Player, Room 
+from game.commands.look import LookCommand 
+from game.commands.save import SaveCommand 
+from game.commands.score import ScoreCommand 
+from game.commands.time import TimeCommand  
+from game.commands.smell import SmellCommand  
+from game.commands.listen import ListenCommand  
+from game.commands.help import HelpCommand 
+from game.commands.get import GetCommand 
+from game.commands.drop import DropCommand
+from game.commands.inventory import InventoryCommand
+from game.commands.say import SayCommand
 
 
 class GameEngine:
@@ -25,6 +29,10 @@ class GameEngine:
             "smell": SmellCommand(),
             "listen": ListenCommand(),
             "help": HelpCommand(),
+            "get": GetCommand(),
+            "drop": DropCommand(),
+            "inventory": InventoryCommand(),
+            "say": SayCommand()
         }
         self.direction_aliases = {
             "n": "north",
@@ -62,6 +70,7 @@ class GameEngine:
         input_list = user_input.split()
         command = input_list[0]
         args = input_list[1:]
+        
         # Alias directions.
         command = self.direction_aliases.get(command, command)
         # Did the user quit?

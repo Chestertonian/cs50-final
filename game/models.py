@@ -32,15 +32,26 @@ class Room:
         ).fetchall()
         return rows
 
+
     def describe(self, db):
         exits = self.get_visible_exits(db)
         exit_list = ", ".join([row["direction"] for row in exits]) or "none"
         wrapped_description = wrap_text(self.description)
+
+        # Fetch items on the floor of this room
+        items = Item.get_items_in_room(self.id, db)
+        if items:
+            item_names = "\n".join(item.name.capitalize() for item in items)
+            items_line = f"\n{item_names}.\n"
+        else:
+            items_line = ""
+
         return (
             f"\n{self.name}\n"
             f"{'-' * len(self.name)}\n"
             "\n"
             f"{wrapped_description}\n"
+            f"{items_line}"
             f"\nExits: {exit_list}\n"
         )
 
@@ -516,7 +527,7 @@ def load_item(instance_id: int, db) -> Item:
 
     if row["item_type"] == "torch":
         return Torch(instance_id, db)
-    # In the future, I'll have code here for Food,potentially Weapon, etc.
+    # In the future, I'll have code here for Food, potentially Weapon, etc.
     return Item(instance_id, db)
 
 
@@ -608,3 +619,23 @@ def load_items(instance_ids: list[int], db) -> list[Item]:
         items.append(item)
 
     return items
+
+
+def find_item_by_name(name: str, items: list) -> "Item | list[Item] | None": # should return one of those
+    query_words = name.lower().split()
+
+    matches = []
+    for item in items:
+        item_words = item.name.lower().split()
+
+        # check if all query words exist in the item name
+        if all(word in item_words for word in query_words):
+            matches.append(item)
+
+    if not matches:
+        return None
+
+    if len(matches) == 1:
+        return matches[0]
+
+    return matches  
