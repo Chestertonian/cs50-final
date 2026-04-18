@@ -75,3 +75,7 @@ April 16, 2026:
 - Items exist! "Get," "inventory," and "drop" now supported.
 
 - "Say" is now supported.
+
+- Trying to figure out ticks, as a precursor to HP, movement, and combat. 
+
+- "Equip" and "remove" commands. 

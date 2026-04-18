@@ -1,16 +1,18 @@
 # game/engine.py
-from game.models import Player, Room 
-from game.commands.look import LookCommand 
-from game.commands.save import SaveCommand 
-from game.commands.score import ScoreCommand 
-from game.commands.time import TimeCommand  
-from game.commands.smell import SmellCommand  
-from game.commands.listen import ListenCommand  
-from game.commands.help import HelpCommand 
-from game.commands.get import GetCommand 
+from game.models import Player, Room
+from game.commands.look import LookCommand
+from game.commands.save import SaveCommand
+from game.commands.score import ScoreCommand
+from game.commands.time import TimeCommand
+from game.commands.smell import SmellCommand
+from game.commands.listen import ListenCommand
+from game.commands.help import HelpCommand
+from game.commands.get import GetCommand
 from game.commands.drop import DropCommand
 from game.commands.inventory import InventoryCommand
 from game.commands.say import SayCommand
+from game.commands.equip import EquipCommand
+from game.commands.remove import RemoveCommand
 
 
 class GameEngine:
@@ -32,15 +34,22 @@ class GameEngine:
             "get": GetCommand(),
             "drop": DropCommand(),
             "inventory": InventoryCommand(),
-            "say": SayCommand()
+            "say": SayCommand(),
+            "equip": EquipCommand(),
+            "remove": RemoveCommand(),
         }
-        self.direction_aliases = {
+        self.aliases = {
+            # directions
             "n": "north",
             "s": "south",
             "e": "east",
             "w": "west",
             "u": "up",
             "d": "down",
+            # commands
+            "i": "inventory",
+            "inv": "inventory",
+            "l": "look",
         }
 
     def run(self):
@@ -70,9 +79,9 @@ class GameEngine:
         input_list = user_input.split()
         command = input_list[0]
         args = input_list[1:]
-        
+
         # Alias directions.
-        command = self.direction_aliases.get(command, command)
+        command = self.aliases.get(command, command)
         # Did the user quit?
         if command == "quit":
             self.quit()

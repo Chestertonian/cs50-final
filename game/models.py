@@ -1,5 +1,5 @@
 # models.py, home to the loading, representation, and saving of various game entities. The purpose of this is to avoid constant raw SQL queries in the code later.
-from game.helpers import wrap_text # pyright: ignore[reportMissingImports]
+from game.helpers import wrap_text  # pyright: ignore[reportMissingImports]
 
 
 class Room:
@@ -32,16 +32,32 @@ class Room:
         ).fetchall()
         return rows
 
-
     def describe(self, db):
+        direction_order = {
+            "north": 0,
+            "northeast": 1,
+            "east": 2,
+            "southeast": 3,
+            "south": 4,
+            "southwest": 5,
+            "west": 6,
+            "northwest": 7,
+            "up": 8,
+            "down": 9,
+        }
         exits = self.get_visible_exits(db)
-        exit_list = ", ".join([row["direction"] for row in exits]) or "none"
+
+        sorted_exits = sorted(
+            exits, key=lambda row: direction_order.get(row["direction"], 99)
+        )
+
+        exit_list = ", ".join(row["direction"] for row in sorted_exits) or "none"
         wrapped_description = wrap_text(self.description)
 
         # Fetch items on the floor of this room
         items = Item.get_items_in_room(self.id, db)
         if items:
-            item_names = "\n".join(item.name.capitalize() for item in items)
+            item_names = ".\n".join(item.name.capitalize() for item in items)
             items_line = f"\n{item_names}.\n"
         else:
             items_line = ""
@@ -621,7 +637,9 @@ def load_items(instance_ids: list[int], db) -> list[Item]:
     return items
 
 
-def find_item_by_name(name: str, items: list) -> "Item | list[Item] | None": # should return one of those
+def find_item_by_name(
+    name: str, items: list
+) -> "Item | list[Item] | None":  # should return one of those
     query_words = name.lower().split()
 
     matches = []
@@ -638,4 +656,4 @@ def find_item_by_name(name: str, items: list) -> "Item | list[Item] | None": # s
     if len(matches) == 1:
         return matches[0]
 
-    return matches  
+    return matches
