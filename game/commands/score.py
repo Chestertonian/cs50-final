@@ -3,6 +3,7 @@ from game.commands.base import Command
 class ScoreCommand(Command):
     def execute(self, player, db, args):
         border = "═" * 47
+        player.refresh(db)
         stats = player.stats
         room = player.get_current_room(db)
         return (

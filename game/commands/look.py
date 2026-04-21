@@ -1,47 +1,60 @@
 from game.commands.base import Command  # pyright: ignore[reportMissingImports]
-from game.models import Item, find_item_by_name #NPC  # adjust if needed
+from game.models import Item, NpcInstance, find_item_by_name
+from game.helpers import wrap_text
 
 
 class LookCommand(Command):
     def execute(self, player, db, args):
-        # Look at room
+
+        # ─────────────────────────────
+        # LOOK AT ROOM
+        # ─────────────────────────────
         if not args:
             room = player.get_current_room(db)
             return room.describe(db)
 
         target_name = " ".join(args).lower()
 
-        # --- Check room items ---
+        # ─────────────────────────────
+        # NPCS IN ROOM
+        # ─────────────────────────────
+        room_npcs = NpcInstance.get_instances_in_room(player.current_room_id, db)
+        npc_match = find_item_by_name(target_name, room_npcs)
+
+        if isinstance(npc_match, list):
+            names = ", ".join(n.name for n in npc_match)
+            return f"Which one do you mean? {names}."
+
+        if npc_match:
+            return wrap_text(f"\n{npc_match.description}\n")
+
+        # ─────────────────────────────
+        # ROOM ITEMS
+        # ─────────────────────────────
         room_items = Item.get_items_in_room(player.current_room_id, db)
-        item = find_item_by_name(target_name, room_items)
+        item_match = find_item_by_name(target_name, room_items)
 
-        if isinstance(item, list):
-            names = ", ".join(i.name for i in item)
+        if isinstance(item_match, list):
+            names = ", ".join(i.name for i in item_match)
             return f"Which one do you mean? {names}."
 
-        if item:
-            return item.description
+        if item_match:
+            return wrap_text(item_match.description)
 
-        # --- Check inventory ---
+        # ─────────────────────────────
+        # INVENTORY ITEMS
+        # ─────────────────────────────
         inventory = Item.get_items_for_player(player.id, db)
-        item = find_item_by_name(target_name, inventory)
+        item_match = find_item_by_name(target_name, inventory)
 
-        if isinstance(item, list):
-            names = ", ".join(i.name for i in item)
+        if isinstance(item_match, list):
+            names = ", ".join(i.name for i in item_match)
             return f"Which one do you mean? {names}."
 
-        if item:
-            return item.description
+        if item_match:
+            return wrap_text(item_match.description)
 
-        # --- Check NPCs ---
-        # npcs = NPC.get_npcs_in_room(player.current_room_id, db)
-        # npc = find_item_by_name(target_name, npcs)  # reuse same matcher
-
-        # if isinstance(npc, list):
-        #    names = ", ".join(n.name for n in npc)
-        #    return f"Which one do you mean? {names}."
-
-        #if npc:
-        #    return npc.description
-
+        # ─────────────────────────────
+        # NOT FOUND
+        # ─────────────────────────────
         return f"You don't see a '{target_name}' here."

@@ -79,3 +79,21 @@ April 16, 2026:
 - Trying to figure out ticks, as a precursor to HP, movement, and combat. 
 
 - "Equip" and "remove" commands. 
+
+
+April 18, 2026:
+
+- Third, fourth, and fifth levels of Perilous Caverns. Area finished.
+
+- Work on NPCs
+
+- To do: on-entrance messages.
+
+
+April 21, 2026:
+
+- HP command
+
+- Cut down classes.
+
+- Update movement.

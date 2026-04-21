@@ -61,6 +61,12 @@ class Room:
             items_line = f"\n{item_names}.\n"
         else:
             items_line = ""
+        npcs = NpcInstance.get_instances_in_room(self.id, db)
+        if npcs:
+            npc_lines = "\n".join(npc.name.capitalize() for npc in npcs)
+            npcs_line = f"\n{npc_lines}.\n"
+        else:
+            npcs_line = ""
 
         return (
             f"\n{self.name}\n"
@@ -68,6 +74,7 @@ class Room:
             "\n"
             f"{wrapped_description}\n"
             f"{items_line}"
+            f"{npcs_line}"
             f"\nExits: {exit_list}\n"
         )
 
@@ -82,6 +89,10 @@ class Player:
         self.current_room_id = row["current_room_id"]
         self.health = row["health"]
         self.max_health = row["max_health"]
+        self.power=row["power"]
+        self.max_power=row["max_power"]
+        self.movement_points=row["movement_points"]
+        self.max_movement_points=row["max_movement_points"]
         self.level = row["level"]
         self.experience = row["experience"]
         self.stats = {
@@ -94,12 +105,20 @@ class Player:
         }
         self.traits = row["traits"]
 
+    def refresh(self, db):
+        row = db.execute("SELECT * FROM players WHERE id = ?",(self.id,)).fetchone()
+        self.__init__(row)
+    
     @staticmethod
     def get_by_name(db, name):
         row = db.execute("SELECT * FROM players WHERE name = ?", (name,)).fetchone()
         return Player(row) if row else None
 
     def move(self, db, direction):
+        if self.movement_points <= 0:
+            print("You are too exhausted to move.")
+            return False
+
         row = db.execute(
             "SELECT * FROM exits WHERE direction = ? AND room_id = ?",
             (direction, self.current_room_id),
@@ -112,14 +131,31 @@ class Player:
             print("The door is locked.")
             return False
 
-        self.current_room_id = row["destination_room_id"]
+        # optional: use room movement cost (fallback to 1 if None)
+        cost = 1  # later you can replace with room-based cost
+
+        if self.movement_points < cost:
+            print("You don't have enough movement points.")
+            return False
+
+        new_room = row["destination_room_id"]
+
         db.execute(
-            "UPDATE players SET current_room_id = ? WHERE id = ?",
-            (self.current_room_id, self.id),
+            """
+            UPDATE players
+            SET current_room_id = ?,
+                movement_points = movement_points - ?
+            WHERE id = ?
+            """,
+            (new_room, cost, self.id),
         )
         db.commit()
-        return True
 
+        # keep object in sync
+        self.current_room_id = new_room
+        self.movement_points -= cost
+
+        return True
     def save(self, db):
         db.execute(
             """UPDATE players SET current_room_id = ?, health = ?,
@@ -526,7 +562,156 @@ class Torch(Item):
             return True
         self.db.commit()
         return False
+class NpcTemplate:
+    """
+    The blueprint for an NPC type — shared data that never changes per-instance.
+    e.g. "Goblin Scout" with its description, stats, and dialogue.
+    """
 
+    def __init__(self, row):
+        self.id = row["id"]
+        self.name = row["name"]
+        self.description = row["description"]
+        self.max_health = row["max_health"]
+        self.is_aggressive = bool(row["is_aggressive"])
+
+    @staticmethod
+    def get_by_id(db, template_id):
+        row = db.execute(
+            "SELECT * FROM npc_templates WHERE id = ?", (template_id,)
+        ).fetchone()
+        return NpcTemplate(row) if row else None
+
+    def __repr__(self):
+        return f"<NpcTemplate id={self.id} '{self.name}'>"
+
+
+class NpcInstance:
+    """
+    A physical NPC living in the world — a specific copy of a template,
+    placed in a room with its own current health and alive/dead state.
+    """
+
+    def __init__(self, row, db):
+        self.id = row["id"]
+        self.template_id = row["template_id"]
+        self.room_id = row["room_id"]
+        self.current_health = row["current_health"]
+        self._is_alive = bool(row["is_alive"])
+
+        # Load the template so we can access name, description, etc. directly
+        self.template = NpcTemplate.get_by_id(db, self.template_id)
+        if self.template is None:
+            raise ValueError(f"No NPC template found for id={self.template_id}")
+
+        # Shortcuts so callers can do npc.name instead of npc.template.name
+        self.name = self.template.name
+        self.description = self.template.description
+        self.max_health = self.template.max_health
+        self.is_aggressive = self.template.is_aggressive
+
+    # ── Properties ──────────────────────────────────────────────────────
+
+    @property
+    def is_alive(self) -> bool:
+        return self._is_alive
+
+    # ── Factory / class-level queries ───────────────────────────────────
+
+    @staticmethod
+    def get_by_id(db, instance_id):
+        row = db.execute(
+            "SELECT * FROM npc_instances WHERE id = ?", (instance_id,)
+        ).fetchone()
+        return NpcInstance(row, db) if row else None
+
+    @classmethod
+    def get_instances_in_room(cls, room_id: int, db) -> list["NpcInstance"]:
+        """Return all living NPC instances currently in a given room."""
+        rows = db.execute(
+            "SELECT * FROM npc_instances WHERE room_id = ? AND is_alive = 1",
+            (room_id,),
+        ).fetchall()
+        return [cls(row, db) for row in rows]
+
+    @classmethod
+    def create_instance(cls, template_id: int, room_id: int, db) -> "NpcInstance":
+        """
+        Spawn a new NPC instance from a template into a room.
+        Sets current_health to the template's max_health automatically.
+        """
+        template = NpcTemplate.get_by_id(db, template_id)
+        if template is None:
+            raise ValueError(f"No NPC template with id={template_id}")
+
+        cursor = db.execute(
+            """
+            INSERT INTO npc_instances (template_id, room_id, current_health, is_alive)
+            VALUES (?, ?, ?, 1)
+            """,
+            (template_id, room_id, template.max_health),
+        )
+        db.commit()
+        return cls.get_by_id(db, cursor.lastrowid)
+
+    # ── Actions ─────────────────────────────────────────────────────────
+
+    def take_damage(self, amount: int, db) -> bool:
+        """
+        Deal damage to this NPC. Returns True if the NPC died, False otherwise.
+        """
+        if not self.is_alive:
+            raise ValueError(f"{self.name} is already dead.")
+
+        new_health = max(0, self.current_health - amount)
+
+        db.execute(
+            "UPDATE npc_instances SET current_health = ? WHERE id = ?",
+            (new_health, self.id),
+        )
+        db.commit()
+        self.current_health = new_health
+
+        if new_health == 0:
+            self._kill(db)
+            return True
+
+        return False
+
+    def _kill(self, db):
+        """Mark this NPC as dead in the database."""
+        db.execute(
+            "UPDATE npc_instances SET is_alive = 0 WHERE id = ?", (self.id,)
+        )
+        db.commit()
+        self._is_alive = False
+
+    def move_to_room(self, room_id: int, db):
+        """Move this NPC to a different room."""
+        db.execute(
+            "UPDATE npc_instances SET room_id = ? WHERE id = ?", (room_id, self.id)
+        )
+        db.commit()
+        self.room_id = room_id
+        
+    def get_dialogue(self, topic: str, db) -> str | None:
+        """Look up a response for a given topic. Returns None if not found."""
+        row = db.execute(
+            "SELECT response FROM dialogue WHERE npc_id = ? AND topic = ?",
+            (self.id, topic.lower())
+        ).fetchone()
+        return row["response"] if row else None 
+
+    def describe(self) -> str:
+        """Short description shown when a player looks at this NPC."""
+        status = "" if self.is_alive else " (dead)"
+        return f"{self.name}{status} — {self.description}"
+
+    def __repr__(self):
+        return (
+            f"<NpcInstance id={self.id} '{self.name}' "
+            f"hp={self.current_health}/{self.max_health} room={self.room_id}>"
+        )
 
 def load_item(instance_id: int, db) -> Item:
     """

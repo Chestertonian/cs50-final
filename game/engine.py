@@ -1,5 +1,6 @@
 # game/engine.py
 from game.models import Player, Room
+from game.tick import process_ticks
 from game.commands.look import LookCommand
 from game.commands.save import SaveCommand
 from game.commands.score import ScoreCommand
@@ -13,6 +14,9 @@ from game.commands.inventory import InventoryCommand
 from game.commands.say import SayCommand
 from game.commands.equip import EquipCommand
 from game.commands.remove import RemoveCommand
+from game.commands.health import HpCommand
+from game.commands.ask import AskCommand
+from game.commands.DevAddMove import AddMovementPointsCommand
 
 
 class GameEngine:
@@ -37,6 +41,9 @@ class GameEngine:
             "say": SayCommand(),
             "equip": EquipCommand(),
             "remove": RemoveCommand(),
+            "hp": HpCommand(),
+            "add": AddMovementPointsCommand(),
+            "ask": AskCommand(),
         }
         self.aliases = {
             # directions
@@ -50,6 +57,8 @@ class GameEngine:
             "i": "inventory",
             "inv": "inventory",
             "l": "look",
+            "p": "hp",
+            "health": "hp",
         }
 
     def run(self):
@@ -79,6 +88,11 @@ class GameEngine:
         input_list = user_input.split()
         command = input_list[0]
         args = input_list[1:]
+        
+        # Handle tick if needed.
+        tick_message = process_ticks(self.player, self.db)
+        if tick_message:
+            print(tick_message)
 
         # Alias directions.
         command = self.aliases.get(command, command)
@@ -91,6 +105,9 @@ class GameEngine:
             return self.commands[command].execute(self.player, self.db, args)
 
         # Next, we have room exit lookup. This draws from the classes built in models.py earlier.
+        room = self.player.get_current_room(self.db)
+        if not room:
+            return "You are nowhere."
         exits = self.player.get_current_room(self.db).get_exits(self.db)
         exit_directions = [row["direction"] for row in exits]
         # If the command's in there, we move!
