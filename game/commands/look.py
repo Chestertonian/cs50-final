@@ -1,6 +1,6 @@
 from game.commands.base import Command  # pyright: ignore[reportMissingImports]
 from game.models import Item, NpcInstance, find_item_by_name
-from game.helpers import wrap_text
+from game.helpers import wrap_text, parse_target_and_index
 
 
 class LookCommand(Command):
@@ -19,7 +19,8 @@ class LookCommand(Command):
         # NPCS IN ROOM
         # ─────────────────────────────
         room_npcs = NpcInstance.get_instances_in_room(player.current_room_id, db)
-        npc_match = find_item_by_name(target_name, room_npcs)
+        npc_name, index = parse_target_and_index(args)
+        npc_match = find_item_by_name(npc_name, room_npcs, index)
 
         if isinstance(npc_match, list):
             names = ", ".join(n.name for n in npc_match)
@@ -32,7 +33,8 @@ class LookCommand(Command):
         # ROOM ITEMS
         # ─────────────────────────────
         room_items = Item.get_items_in_room(player.current_room_id, db)
-        item_match = find_item_by_name(target_name, room_items)
+        item_name, index = parse_target_and_index(args)
+        item_match = find_item_by_name(item_name, room_items, index)
 
         if isinstance(item_match, list):
             names = ", ".join(i.name for i in item_match)

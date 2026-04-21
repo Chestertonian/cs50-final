@@ -2,6 +2,7 @@
 
 from game.commands.base import Command
 from game.models import Item, find_item_by_name
+from game.helpers import parse_target_and_index
 
 
 class EquipCommand(Command):
@@ -12,7 +13,9 @@ class EquipCommand(Command):
         item_name = " ".join(args)
 
         inventory = Item.get_items_for_player(player.id, db)
-        result = find_item_by_name(item_name, inventory)
+        item_name, index = parse_target_and_index(args)
+        result = find_item_by_name(item_name, inventory, index)
+
 
         if result is None:
             return f"You don't have '{item_name}'."

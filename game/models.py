@@ -128,9 +128,26 @@ class Player:
             return False
 
         if row["locked"]:
-            print("The door is locked.")
-            return False
-
+            key_id = row["key_template_id"]
+            if key_id is None:
+                print("The door is locked.")
+                return False
+            
+            # Check if player is carrying the right key
+            key = db.execute(
+                """
+                SELECT 1 FROM item_instances ii
+                JOIN item_locations il ON ii.id = il.instance_id
+                WHERE il.player_id = ?
+                AND ii.template_id = ?
+                """,
+                (self.id, key_id)
+            ).fetchone()
+            
+            if not key:
+                print("The door is locked.")
+                return False
+            print("You unlock the door.")
         # optional: use room movement cost (fallback to 1 if None)
         cost = 1  # later you can replace with room-based cost
 
@@ -777,11 +794,13 @@ def load_items(instance_ids: list[int], db) -> list[Item]:
     # ─────────────────────────────────────────────
     # 3. Load all locations
     # ─────────────────────────────────────────────
+    # Step 3. Load all locations
+    placeholders = ",".join("?" for _ in instance_ids)  # ← recalculate!
     location_rows = db.execute(
         f"""
         SELECT * FROM item_locations
         WHERE instance_id IN ({placeholders})
-    """,
+        """,
         instance_ids,
     ).fetchall()
 
@@ -823,22 +842,20 @@ def load_items(instance_ids: list[int], db) -> list[Item]:
 
 
 def find_item_by_name(
-    name: str, items: list
-) -> "Item | list[Item] | None":  # should return one of those
+    name: str, items: list, index: int = 1
+) -> "Item | None":
     query_words = name.lower().split()
 
     matches = []
     for item in items:
         item_words = item.name.lower().split()
-
-        # check if all query words exist in the item name
         if all(word in item_words for word in query_words):
             matches.append(item)
 
     if not matches:
         return None
 
-    if len(matches) == 1:
-        return matches[0]
+    if index > len(matches):
+        return None
 
-    return matches
+    return matches[index - 1]

@@ -1,5 +1,6 @@
 from game.commands.base import Command
 from game.models import Item, find_item_by_name
+from game.helpers import parse_target_and_index
 
 
 class GetCommand(Command):
@@ -7,10 +8,10 @@ class GetCommand(Command):
         if not args:
             return "Get what?"
 
-        item_name = " ".join(args)  # handles multi-word names like "iron sword"
-
+        item_name, index = parse_target_and_index(args)
         room_items = Item.get_items_in_room(player.current_room_id, db)
-        item = find_item_by_name(item_name, room_items)
+        item = find_item_by_name(item_name, room_items, index)
+
 
         if item is None:
             return f"You don't see a '{item_name.lower()}' here."

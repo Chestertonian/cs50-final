@@ -53,3 +53,18 @@ def wrap_text(text: str, width: int = 80, indent: int = 0) -> str:
         wrapped_paragraphs.append(wrapped)
 
     return "\n\n".join(wrapped_paragraphs)
+
+def parse_target_and_index(args: list[str]) -> tuple[str, int]:
+    """
+    Given args like ['cap', '2'] or ['goblin', '2'] or ['iron', 'cap'],
+    returns (name, index) where index defaults to 1.
+    
+    Examples:
+        ['cap', '2']       → ('cap', 2)
+        ['iron', 'cap']    → ('iron cap', 1)
+        ['goblin']         → ('goblin', 1)
+        ['goblin', '2']    → ('goblin', 2)
+    """
+    if args and args[-1].isdigit():
+        return " ".join(args[:-1]), int(args[-1])
+    return " ".join(args), 1

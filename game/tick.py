@@ -1,4 +1,5 @@
 import time
+from game.spawner import run_spawns
 
 # --- Configuration ---
 TICK_INTERVAL = 20     
@@ -10,7 +11,7 @@ MAX_TICKS_AT_ONCE = 10
 
 def process_ticks(player, db):
     now = time.time()
-
+    run_spawns(db)
     row = db.execute(
         "SELECT last_tick_at FROM players WHERE id = ?",
         (player.id,)

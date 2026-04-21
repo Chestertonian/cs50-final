@@ -1,3 +1,5 @@
+# game/commands/score.py
+
 from game.commands.base import Command
 
 class ScoreCommand(Command):

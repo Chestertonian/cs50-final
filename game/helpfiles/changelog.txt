@@ -92,8 +92,14 @@ April 18, 2026:
 
 April 21, 2026:
 
-- HP command
+- HP command, health, regeneration
 
-- Cut down classes.
+- NPCs
 
-- Update movement.
+- Dialogue
+
+- Update movement
+
+
+
+- 
