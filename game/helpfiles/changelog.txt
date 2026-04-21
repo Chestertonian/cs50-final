@@ -98,7 +98,13 @@ April 21, 2026:
 
 - Dialogue
 
-- Update movement
+- Update movement to cost movement points
+
+- Spawning items and NPCs
+
+- Unlocking doors
+
+- Updated to support commands like "attack goblin 2."
 
 
 

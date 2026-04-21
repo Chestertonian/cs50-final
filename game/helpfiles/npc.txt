@@ -1,0 +1,7 @@
+------------------------------------
+
+An NPC is any creature in the game that is not a player. NPCs can be friendly to you, aggressive, or simply neutral. They could include anything from a deer to a dragon, from a king to a cave troll, or from a god to a gargoyle. 
+
+You can talk to many NPCs; others you can do battle against.
+
+Related files: ask.

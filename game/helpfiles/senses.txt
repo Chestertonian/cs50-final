@@ -1,0 +1,10 @@
+Syntax: 
+
+'smell'
+'listen'
+
+------------------------------------
+
+This allows you to observe various things about an area.
+
+Related files: look.

@@ -1,0 +1,9 @@
+Syntax: 
+
+'drop <object>', 'drop <object> 2', etc.
+
+------------------------------------
+
+This allows you to drop an object.
+
+Related files: equip, get, inventory, remove.

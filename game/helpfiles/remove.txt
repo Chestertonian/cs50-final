@@ -1,0 +1,9 @@
+Syntax: 
+
+'remove <object>'
+
+------------------------------------
+
+This allows you to stop using an object, like a weapon or piece of armor.
+
+Related files: drop, equip, get, inventory.

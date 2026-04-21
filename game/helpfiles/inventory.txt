@@ -1,0 +1,9 @@
+Syntax: 
+
+'inventory'
+
+------------------------------------
+
+This displays your inventory and the objects equipped.
+
+Related files: equip, get, drop, remove.

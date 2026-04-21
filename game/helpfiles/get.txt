@@ -1,0 +1,9 @@
+Syntax: 
+
+'get <object>', 'get <object> 2', etc.
+
+------------------------------------
+
+This allows you to take an object from a room.
+
+Related files: drop, equip, inventory, remove.

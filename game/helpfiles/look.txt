@@ -1,9 +1,9 @@
 Syntax:   
 
-'look,' 'look <object>' (Not yet implemented.)
+'look,' 'look <target>'
 
 ------------------------------------
 
-This command can be used to observe the room that the user is currently in.
+This command can be used to observe the room that the user is currently in, or a particular target (NPC or object).
 
 Related files: senses.

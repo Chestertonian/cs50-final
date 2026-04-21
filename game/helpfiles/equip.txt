@@ -1,0 +1,9 @@
+Syntax: 
+
+'equip <object>', 'get <object> 2', etc.
+
+------------------------------------
+
+This allows you to start using an object (armor or weapon).
+
+Related files: drop, get, inventory, remove.

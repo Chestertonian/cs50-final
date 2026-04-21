@@ -1,0 +1,10 @@
+Syntax: 
+
+'ask guard about job'
+'ask threna about rumors'
+
+------------------------------------
+
+This allows you to speak with a creature and attempt to gain information from it.
+
+Related files: npcs.

@@ -712,12 +712,12 @@ class NpcInstance:
         self.room_id = room_id
         
     def get_dialogue(self, topic: str, db) -> str | None:
-        """Look up a response for a given topic. Returns None if not found."""
         row = db.execute(
             "SELECT response FROM dialogue WHERE npc_id = ? AND topic = ?",
-            (self.id, topic.lower())
+            (self.template_id, topic.lower())  
         ).fetchone()
-        return row["response"] if row else None 
+        return row["response"] if row else None
+
 
     def describe(self) -> str:
         """Short description shown when a player looks at this NPC."""
