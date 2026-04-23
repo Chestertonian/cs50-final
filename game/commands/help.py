@@ -1,6 +1,7 @@
+# game/commands/help.py
+
 from game.commands.base import Command
 from game.helpers import wrap_text
-import os
 from pathlib import Path
 
 class HelpCommand(Command):

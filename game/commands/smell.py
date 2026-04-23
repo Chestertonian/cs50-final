@@ -1,3 +1,5 @@
+# game/commands/smell.py
+
 from game.commands.base import Command
 
 class SmellCommand(Command):

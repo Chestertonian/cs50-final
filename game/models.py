@@ -63,7 +63,7 @@ class Room:
             items_line = ""
         npcs = NpcInstance.get_instances_in_room(self.id, db)
         if npcs:
-            npc_lines = "\n".join(npc.name.capitalize() for npc in npcs)
+            npc_lines = ".\n".join(npc.name.capitalize() for npc in npcs)
             npcs_line = f"\n{npc_lines}.\n"
         else:
             npcs_line = ""
@@ -89,12 +89,13 @@ class Player:
         self.current_room_id = row["current_room_id"]
         self.health = row["health"]
         self.max_health = row["max_health"]
-        self.power=row["power"]
-        self.max_power=row["max_power"]
-        self.movement_points=row["movement_points"]
-        self.max_movement_points=row["max_movement_points"]
+        self.power = row["power"]
+        self.max_power = row["max_power"]
+        self.movement_points = row["movement_points"]
+        self.max_movement_points = row["max_movement_points"]
         self.level = row["level"]
         self.experience = row["experience"]
+        self.wealth = row["wealth"]
         self.stats = {
             "STR": row["str_stat"],
             "CON": row["con_stat"],
@@ -106,9 +107,9 @@ class Player:
         self.traits = row["traits"]
 
     def refresh(self, db):
-        row = db.execute("SELECT * FROM players WHERE id = ?",(self.id,)).fetchone()
+        row = db.execute("SELECT * FROM players WHERE id = ?", (self.id,)).fetchone()
         self.__init__(row)
-    
+
     @staticmethod
     def get_by_name(db, name):
         row = db.execute("SELECT * FROM players WHERE name = ?", (name,)).fetchone()
@@ -132,7 +133,7 @@ class Player:
             if key_id is None:
                 print("The door is locked.")
                 return False
-            
+
             # Check if player is carrying the right key
             key = db.execute(
                 """
@@ -141,9 +142,9 @@ class Player:
                 WHERE il.player_id = ?
                 AND ii.template_id = ?
                 """,
-                (self.id, key_id)
+                (self.id, key_id),
             ).fetchone()
-            
+
             if not key:
                 print("The door is locked.")
                 return False
@@ -173,6 +174,7 @@ class Player:
         self.movement_points -= cost
 
         return True
+
     def save(self, db):
         db.execute(
             """UPDATE players SET current_room_id = ?, health = ?,
@@ -579,6 +581,8 @@ class Torch(Item):
             return True
         self.db.commit()
         return False
+
+
 class NpcTemplate:
     """
     The blueprint for an NPC type — shared data that never changes per-instance.
@@ -697,9 +701,7 @@ class NpcInstance:
 
     def _kill(self, db):
         """Mark this NPC as dead in the database."""
-        db.execute(
-            "UPDATE npc_instances SET is_alive = 0 WHERE id = ?", (self.id,)
-        )
+        db.execute("UPDATE npc_instances SET is_alive = 0 WHERE id = ?", (self.id,))
         db.commit()
         self._is_alive = False
 
@@ -710,14 +712,13 @@ class NpcInstance:
         )
         db.commit()
         self.room_id = room_id
-        
+
     def get_dialogue(self, topic: str, db) -> str | None:
         row = db.execute(
             "SELECT response FROM dialogue WHERE npc_id = ? AND topic = ?",
-            (self.template_id, topic.lower())  
+            (self.template_id, topic.lower()),
         ).fetchone()
         return row["response"] if row else None
-
 
     def describe(self) -> str:
         """Short description shown when a player looks at this NPC."""
@@ -729,6 +730,7 @@ class NpcInstance:
             f"<NpcInstance id={self.id} '{self.name}' "
             f"hp={self.current_health}/{self.max_health} room={self.room_id}>"
         )
+
 
 def load_item(instance_id: int, db) -> Item:
     """
@@ -841,9 +843,7 @@ def load_items(instance_ids: list[int], db) -> list[Item]:
     return items
 
 
-def find_item_by_name(
-    name: str, items: list, index: int = 1
-) -> "Item | None":
+def find_item_by_name(name: str, items: list, index: int = 1) -> "Item | None":
     query_words = name.lower().split()
 
     matches = []

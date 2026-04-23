@@ -1,3 +1,5 @@
+# game/commands/save.py
+
 from game.commands.base import Command
 
 class SaveCommand(Command):
@@ -5,6 +7,5 @@ class SaveCommand(Command):
         try:
             player.save(db)
             print("Saved.")
-            # TODO: Save timer?
         except:
             print("Something went wrong.")

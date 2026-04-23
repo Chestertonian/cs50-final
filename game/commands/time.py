@@ -1,4 +1,6 @@
-# Written by Lumo, edited by yours truly.
+# game/commands/time.py
+# Edited by AI.
+
 from game.commands.base import Command
 import datetime
 

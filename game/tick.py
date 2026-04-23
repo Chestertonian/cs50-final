@@ -5,7 +5,7 @@ from game.spawner import run_spawns
 TICK_INTERVAL = 20     
 HP_PER_TICK = 1         
 SP_PER_TICK = 1
-MP_PER_TICK = 1
+MP_PER_TICK = 2
 MAX_TICKS_AT_ONCE = 10  
 
 

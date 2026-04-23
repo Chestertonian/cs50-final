@@ -1,3 +1,5 @@
+# game/commands/look.py
+
 from game.commands.base import Command  # pyright: ignore[reportMissingImports]
 from game.models import Item, NpcInstance, find_item_by_name
 from game.helpers import wrap_text, parse_target_and_index

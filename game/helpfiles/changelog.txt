@@ -90,6 +90,7 @@ April 18, 2026:
 - To do: on-entrance messages.
 
 
+
 April 21, 2026:
 
 - HP command, health, regeneration
@@ -108,4 +109,6 @@ April 21, 2026:
 
 
 
-- 
+April 22, 2026:
+
+- "Wealth" command. Wealth now exists.
