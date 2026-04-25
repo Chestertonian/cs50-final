@@ -4,6 +4,27 @@
 import textwrap
 import sqlite3
 
+XP_TABLE = {
+    1: 300,
+    2: 500,
+    3: 800,
+    4: 1200,
+    5: 1700,
+    6: 2300,
+    7: 3000,
+    8: 3800,
+    9: 4700,
+    10: 5800,
+    11: 7000,
+    12: 8500,
+    13: 10000,
+    14: 12000,
+    15: 14500,
+    16: 17500,
+    17: 21000,
+    18: 25000,
+    19: 35000  
+}
 
 def get_db():
     db = sqlite3.connect("db/game.db")
@@ -68,3 +89,4 @@ def parse_target_and_index(args: list[str]) -> tuple[str, int]:
     if args and args[-1].isdigit():
         return " ".join(args[:-1]), int(args[-1])
     return " ".join(args), 1
+

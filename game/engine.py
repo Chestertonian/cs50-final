@@ -18,6 +18,7 @@ from game.commands.health import HpCommand
 from game.commands.ask import AskCommand
 from game.commands.DevAddMove import AddMovementPointsCommand
 from game.commands.wealth import WealthCommand
+from game.commands.kill import KillCommand
 
 
 class GameEngine:
@@ -46,6 +47,7 @@ class GameEngine:
             "add": AddMovementPointsCommand(),
             "ask": AskCommand(),
             "wealth": WealthCommand(),
+            "kill": KillCommand(),
         }
         self.aliases = {
             # directions
@@ -62,6 +64,7 @@ class GameEngine:
             "p": "hp",
             "health": "hp",
             "a": "wealth",
+            "attack": "kill",
         }
 
     def run(self):

@@ -1,6 +1,6 @@
 # models.py, home to the loading, representation, and saving of various game entities. The purpose of this is to avoid constant raw SQL queries in the code later.
 from game.helpers import wrap_text  # pyright: ignore[reportMissingImports]
-
+from game.combat.combat_state import CombatState
 
 class Room:
     def __init__(self, row):
@@ -105,6 +105,7 @@ class Player:
             "CHA": row["cha_stat"],
         }
         self.traits = row["traits"]
+        self.combat=CombatState()
 
     def refresh(self, db):
         row = db.execute("SELECT * FROM players WHERE id = ?", (self.id,)).fetchone()
@@ -172,7 +173,11 @@ class Player:
         # keep object in sync
         self.current_room_id = new_room
         self.movement_points -= cost
-
+        for instance in NpcInstance.get_instances_in_room(self.current_room_id, db):
+            if instance.is_aggro_to_player:
+                # A thing happens. Deal damage. attack_roll()
+                print("The monster furiously attacks you as combat is rejoined!")
+        
         return True
 
     def save(self, db):
@@ -619,6 +624,8 @@ class NpcInstance:
         self.room_id = row["room_id"]
         self.current_health = row["current_health"]
         self._is_alive = bool(row["is_alive"])
+        self.is_aggro_to_player = row["is_aggro_to_player"]
+        self.aggro_since = row["aggro_since"]
 
         # Load the template so we can access name, description, etc. directly
         self.template = NpcTemplate.get_by_id(db, self.template_id)
@@ -724,7 +731,28 @@ class NpcInstance:
         """Short description shown when a player looks at this NPC."""
         status = "" if self.is_alive else " (dead)"
         return f"{self.name}{status} — {self.description}"
+    
+    def set_aggro(self, db):
+        import time
+        self.is_aggro_to_player = 1
+        self.aggro_since = time.time()
+        db.execute("""
+            UPDATE npc_instances
+            SET is_aggro_to_player = 1, aggro_since = ?
+            WHERE id = ?
+        """, (self.aggro_since, self.id))
+        db.commit()
 
+    def clear_aggro(self, db):
+        self.is_aggro_to_player = 0
+        self.aggro_since = None
+        db.execute("""
+            UPDATE npc_instances
+            SET is_aggro_to_player = 0, aggro_since = NULL
+            WHERE id = ?
+        """, (self.id,))
+        db.commit()
+        
     def __repr__(self):
         return (
             f"<NpcInstance id={self.id} '{self.name}' "
