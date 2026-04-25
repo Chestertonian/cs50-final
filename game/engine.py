@@ -19,6 +19,9 @@ from game.commands.ask import AskCommand
 from game.commands.DevAddMove import AddMovementPointsCommand
 from game.commands.wealth import WealthCommand
 from game.commands.kill import KillCommand
+from game.commands.flee import FleeCommand
+from game.commands.DevClearCombat import DevClearCombatCommand
+from game.commands.DevDeathCommand import DeathCommand
 
 
 class GameEngine:
@@ -48,6 +51,9 @@ class GameEngine:
             "ask": AskCommand(),
             "wealth": WealthCommand(),
             "kill": KillCommand(),
+            "clear_combat": DevClearCombatCommand(),
+            "flee": FleeCommand(),
+            "die": DeathCommand(),
         }
         self.aliases = {
             # directions
@@ -116,7 +122,10 @@ class GameEngine:
             return "You are nowhere."
         exits = self.player.get_current_room(self.db).get_exits(self.db)
         exit_directions = [row["direction"] for row in exits]
-        # If the command's in there, we move!
+        # If the command's in there, we move. Unless it's combat.
+        if self.player.combat.is_in_combat():
+            print("One does not simply walk away from battle.")
+            return False
         if command in exit_directions:
             moved = self.player.move(self.db, command)
             if moved:

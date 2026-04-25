@@ -1,8 +1,10 @@
 # game/combat/combat_loop.py
 
+# Am I somehow adding experience in this? Weird.
+
 from game.helpers import XP_TABLE
 
-RESPAWN_ROOM_ID = 1
+RESPAWN_ROOM_ID = 206
 
 def handle_death(player, db):
     # 1. XP loss
@@ -59,4 +61,4 @@ def handle_death(player, db):
           """)
     print("\nYou have died.")
     print(f"You lost {xp_loss} experience.")
-    print("You wake up without your belongings.\n")
+    print("You wake up without your belongings, alas.\n")

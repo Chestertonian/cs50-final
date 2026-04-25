@@ -26,6 +26,8 @@ XP_TABLE = {
     19: 35000  
 }
 
+AGGRO_TIMER=1200
+
 def get_db():
     db = sqlite3.connect("db/game.db")
     db.row_factory = sqlite3.Row

@@ -1,6 +1,8 @@
 # models.py, home to the loading, representation, and saving of various game entities. The purpose of this is to avoid constant raw SQL queries in the code later.
-from game.helpers import wrap_text  # pyright: ignore[reportMissingImports]
+from game.helpers import wrap_text, AGGRO_TIMER  # pyright: ignore[reportMissingImports]
 from game.combat.combat_state import CombatState
+import time
+
 
 class Room:
     def __init__(self, row):
@@ -120,7 +122,6 @@ class Player:
         if self.movement_points <= 0:
             print("You are too exhausted to move.")
             return False
-
         row = db.execute(
             "SELECT * FROM exits WHERE direction = ? AND room_id = ?",
             (direction, self.current_room_id),
@@ -173,10 +174,15 @@ class Player:
         # keep object in sync
         self.current_room_id = new_room
         self.movement_points -= cost
+        for npc in NpcInstance.get_instances_in_room(self.current_room_id, db):
+            if npc.is_aggro_to_player:
+                if time.time() - npc.aggro_since > AGGRO_TIMER:
+                    npc.clear_aggro(db)
         for instance in NpcInstance.get_instances_in_room(self.current_room_id, db):
             if instance.is_aggro_to_player:
                 # A thing happens. Deal damage. attack_roll()
                 print("The monster furiously attacks you as combat is rejoined!")
+                self.combat.start_combat(instance.id)
         
         return True
 

@@ -112,3 +112,9 @@ April 21, 2026:
 April 22, 2026:
 
 - "Wealth" command. Wealth now exists.
+
+
+
+April 25, 2026:
+
+- Beginnings of combat system starting to emerge -- flee command, attack, etc. Actual damage dealing yet to be dealt with.
