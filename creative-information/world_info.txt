@@ -1,0 +1,7 @@
+In terms of world that currently has been built: small town of Thornheim, East Forest, road eastwards out of town ("last highway") and five-level cave. 
+Level 1 has goblins. 
+Level 2 has abandoned-area type creatures. 
+Level 3 is pretty empty, but has some troglodytes and a cave troll. 
+Level 4 has a dragon, nothing else yet. 
+Level 5 has fire-type beings. (Fire elemental, fire-hounds, fiery warrior, salamanders.)
+
