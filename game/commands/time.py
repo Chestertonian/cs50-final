@@ -4,12 +4,13 @@
 from game.commands.base import Command
 import datetime
 
+
 class TimeCommand(Command):
     def execute(self, player, db, args):
         now = datetime.datetime.now()
         current_hour = now.hour
         current_time = now.time()
-        
+
         sunrise = datetime.time(6, 0)
         sunset = datetime.time(19, 0)
         if current_hour == 0:

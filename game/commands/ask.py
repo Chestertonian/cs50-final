@@ -4,6 +4,7 @@ from game.models import NpcInstance, find_item_by_name
 from game.commands.base import Command
 from game.helpers import wrap_text, parse_target_and_index
 
+
 class AskCommand(Command):
     def execute(self, player, db, args):
 
@@ -14,7 +15,8 @@ class AskCommand(Command):
         # so we parse just the NPC part (everything before 'about')
         about_index = args.index("about") if "about" in args else 1
         npc_args = args[:about_index]
-        keyword = args[about_index + 1] if about_index + 1 < len(args) else None
+        keyword = args[about_index + 1] if about_index + \
+            1 < len(args) else None
 
         if not keyword:
             return "Ask who about what?"

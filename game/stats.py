@@ -35,7 +35,8 @@ def assign_stats():
         print(f"  {i}. {val}")
     print()
 
-    reroll = input("Would you like to use your reroll? (yes/no)\n> ").strip().lower()
+    reroll = input(
+        "Would you like to use your reroll? (yes/no)\n> ").strip().lower()
     if reroll in ("yes", "y"):
         print("\nVery well. Rolling again...\n")
         rolls = sorted(roll_all_stats(), reverse=True)

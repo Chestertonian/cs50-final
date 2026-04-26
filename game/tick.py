@@ -2,11 +2,11 @@ import time
 from game.spawner import run_spawns
 
 # --- Configuration ---
-TICK_INTERVAL = 20     
-HP_PER_TICK = 1         
+TICK_INTERVAL = 20
+HP_PER_TICK = 1
 SP_PER_TICK = 1
 MP_PER_TICK = 2
-MAX_TICKS_AT_ONCE = 10  
+MAX_TICKS_AT_ONCE = 10
 
 
 def process_ticks(player, db):
@@ -28,8 +28,10 @@ def process_ticks(player, db):
 
     ticks_to_run = min(ticks_due, MAX_TICKS_AT_ONCE)
 
-    player.health = min(player.health + ticks_to_run * HP_PER_TICK, player.max_health)
-    player.power = min(player.power + ticks_to_run * SP_PER_TICK, player.max_power)
+    player.health = min(player.health + ticks_to_run *
+                        HP_PER_TICK, player.max_health)
+    player.power = min(player.power + ticks_to_run *
+                       SP_PER_TICK, player.max_power)
     player.movement_points = min(
         player.movement_points + ticks_to_run * MP_PER_TICK,
         player.max_movement_points

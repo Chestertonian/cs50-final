@@ -21,6 +21,7 @@ class CombatState:
         if self.primary_target_id == npc_id:
             self.primary_target_id = self.attacker_ids[0] if self.attacker_ids else None
 
+
     def is_in_combat(self):
         return len(self.attacker_ids) > 0
 

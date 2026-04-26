@@ -1,7 +1,7 @@
 from game.commands.base import Command
 
 
-class AddMovementPointsCommand(Command):
+class AddHealthPointsCommand(Command):
     def execute(self, player, db, args):
         try:
             amount = int(args[0]) if args else 10
@@ -11,7 +11,7 @@ class AddMovementPointsCommand(Command):
         db.execute(
             """
             UPDATE players
-            SET movement_points = movement_points + ?
+            SET health = health + ?
             WHERE id = ?
             """,
             (amount, player.id),
@@ -19,6 +19,6 @@ class AddMovementPointsCommand(Command):
         db.commit()
 
         # keep in-memory object in sync
-        player.movement_points += amount
+        player.health += amount
 
-        return f"Added {amount} movement points. (Now {player.movement_points}/{player.max_movement_points})"
+        return f"Added {amount} health points. (Now {player.health}/{player.max_health})"

@@ -14,9 +14,9 @@ def main_menu(db):
         choice = input("Choose an option (1-3): ").strip()
 
         if choice == "1":
-            return(login_screen(db))
+            return (login_screen(db))
         elif choice == "2":
-            return(create_character(db))
+            return (create_character(db))
         elif choice == "3":
             print("Goodbye!")
             break

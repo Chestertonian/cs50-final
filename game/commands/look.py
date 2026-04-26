@@ -20,7 +20,8 @@ class LookCommand(Command):
         # ─────────────────────────────
         # NPCS IN ROOM
         # ─────────────────────────────
-        room_npcs = NpcInstance.get_instances_in_room(player.current_room_id, db)
+        room_npcs = NpcInstance.get_instances_in_room(
+            player.current_room_id, db)
         npc_name, index = parse_target_and_index(args)
         npc_match = find_item_by_name(npc_name, room_npcs, index)
 

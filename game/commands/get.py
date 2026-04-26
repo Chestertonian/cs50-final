@@ -14,7 +14,6 @@ class GetCommand(Command):
         room_items = Item.get_items_in_room(player.current_room_id, db)
         item = find_item_by_name(item_name, room_items, index)
 
-
         if item is None:
             return f"You don't see a '{item_name.lower()}' here."
 

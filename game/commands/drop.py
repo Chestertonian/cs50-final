@@ -1,8 +1,9 @@
-#game/commands/drop.py
+# game/commands/drop.py
 
 from game.commands.base import Command
 from game.models import Item, find_item_by_name
 from game.helpers import parse_target_and_index
+
 
 class DropCommand(Command):
     def execute(self, player, db, args):
@@ -15,7 +16,6 @@ class DropCommand(Command):
         item_name, index = parse_target_and_index(args)
         item = find_item_by_name(item_name, player_items, index)
 
-
         if item is None:
             return f"You don't have a '{item_name.lower()}'."
 
@@ -25,7 +25,7 @@ class DropCommand(Command):
 
         if not item.is_droppable:
             return f"You can't drop the {item.name.lower()}."
-        
-        room=player.get_current_room(db)
+
+        room = player.get_current_room(db)
         item.move_to_room(room.id)
         return f"You drop the {item.name.lower()}."

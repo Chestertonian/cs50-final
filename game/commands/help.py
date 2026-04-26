@@ -4,6 +4,7 @@ from game.commands.base import Command
 from game.helpers import wrap_text
 from pathlib import Path
 
+
 class HelpCommand(Command):
     def execute(self, player, db, args):
         if not args:
@@ -17,7 +18,7 @@ class HelpCommand(Command):
         """
         current_file_dir = Path(__file__).parent
         help_dir = current_file_dir.parent / "helpfiles"
-        
+
         if not help_dir.exists() or not help_dir.is_dir():
             print("\n--------- Help Index ---------\n")
             print("No help directory found. Please contact an administrator.")
@@ -25,7 +26,8 @@ class HelpCommand(Command):
             return
 
         try:
-            txt_files = [f.stem for f in help_dir.iterdir() if f.is_file() and f.suffix == ".txt"]
+            txt_files = [f.stem for f in help_dir.iterdir(
+            ) if f.is_file() and f.suffix == ".txt"]
             topics = sorted(txt_files)
         except PermissionError:
             print("\n--------- Help Index ---------\n")
@@ -44,15 +46,15 @@ class HelpCommand(Command):
 
         print("\n--------- Available Help Topics ---------\n")
         print("Type 'help <topic>' for details.\n")
-        
+
         # Build the list without brackets
         lines = []
         current_line = ""
-        
+
         for topic in topics:
             # Removed the brackets here
-            item = topic 
-            
+            item = topic
+
             if not current_line:
                 current_line = item
             elif len(current_line) + len(item) + 2 <= 60:
@@ -60,7 +62,7 @@ class HelpCommand(Command):
             else:
                 lines.append(current_line)
                 current_line = item
-        
+
         if current_line:
             lines.append(current_line)
 

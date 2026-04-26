@@ -3,4 +3,5 @@
 
 class Command:
     def execute(self, player, db, args):
-        raise NotImplementedError("Command subclasses must implement execute().")
+        raise NotImplementedError(
+            "Command subclasses must implement execute().")

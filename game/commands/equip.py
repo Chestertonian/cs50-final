@@ -16,7 +16,6 @@ class EquipCommand(Command):
         item_name, index = parse_target_and_index(args)
         result = find_item_by_name(item_name, inventory, index)
 
-
         if result is None:
             return f"You don't have '{item_name}'."
 

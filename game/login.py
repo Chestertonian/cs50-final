@@ -26,7 +26,7 @@ def login_screen(db):
             print(f"\nI know none by the name of {username}.\n")
             continue
         break
-    
+
     failed_logins = 0
     while True:
         password = (
@@ -41,8 +41,10 @@ def login_screen(db):
         ).fetchone()
         if login_check:
             print("Enter the realms.")
+            db.execute("UPDATE npc_instances SET is_aggro_to_player = 0, aggro_since = NULL")
+            db.commit()
             return username
-            
+
         else:
             print(f"Failed login. {3-failed_logins} attempts remaining.")
             if failed_logins == 3:
@@ -51,4 +53,3 @@ def login_screen(db):
             else:
                 failed_logins += 1
                 continue
-                

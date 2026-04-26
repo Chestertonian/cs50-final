@@ -1,5 +1,6 @@
 # models.py, home to the loading, representation, and saving of various game entities. The purpose of this is to avoid constant raw SQL queries in the code later.
-from game.helpers import wrap_text, AGGRO_TIMER  # pyright: ignore[reportMissingImports]
+# pyright: ignore[reportMissingImports]
+from game.helpers import wrap_text, AGGRO_TIMER
 from game.combat.combat_state import CombatState
 import time
 
@@ -17,7 +18,8 @@ class Room:
 
     @staticmethod
     def get_by_id(db, room_id):
-        row = db.execute("SELECT * FROM rooms WHERE id = ?", (room_id,)).fetchone()
+        row = db.execute("SELECT * FROM rooms WHERE id = ?",
+                         (room_id,)).fetchone()
         return Room(row) if row else None
 
     def get_exits(self, db):
@@ -53,7 +55,8 @@ class Room:
             exits, key=lambda row: direction_order.get(row["direction"], 99)
         )
 
-        exit_list = ", ".join(row["direction"] for row in sorted_exits) or "none"
+        exit_list = ", ".join(row["direction"]
+                              for row in sorted_exits) or "none"
         wrapped_description = wrap_text(self.description)
 
         # Fetch items on the floor of this room
@@ -107,15 +110,19 @@ class Player:
             "CHA": row["cha_stat"],
         }
         self.traits = row["traits"]
-        self.combat=CombatState()
+        self.combat = CombatState()
 
     def refresh(self, db):
-        row = db.execute("SELECT * FROM players WHERE id = ?", (self.id,)).fetchone()
+        row = db.execute("SELECT * FROM players WHERE id = ?",
+                        (self.id,)).fetchone()
+        combat = self.combat  # save combat state
         self.__init__(row)
+        self.combat = combat  # restore it
 
     @staticmethod
     def get_by_name(db, name):
-        row = db.execute("SELECT * FROM players WHERE name = ?", (name,)).fetchone()
+        row = db.execute(
+            "SELECT * FROM players WHERE name = ?", (name,)).fetchone()
         return Player(row) if row else None
 
     def move(self, db, direction):
@@ -183,7 +190,7 @@ class Player:
                 # A thing happens. Deal damage. attack_roll()
                 print("The monster furiously attacks you as combat is rejoined!")
                 self.combat.start_combat(instance.id)
-        
+
         return True
 
     def save(self, db):
@@ -213,9 +220,19 @@ class Player:
 
     def get_current_room(self, db):
         return Room.get_by_id(db, self.current_room_id)
+    
+    def get_equipped_weapon(self, db):
+        row = db.execute("""
+            SELECT ii.id, it.name, iwt.damage_min, iwt.damage_max
+            FROM item_locations il
+            JOIN item_instances ii ON il.instance_id = ii.id
+            JOIN item_templates it ON ii.template_id = it.id
+            JOIN item_weapon_templates iwt ON it.id = iwt.template_id
+            WHERE il.player_id = ? AND il.equipped_slot = 'weapon'
+        """, (self.id,)).fetchone()
+        return row  # None if no weapon equipped
 
 
-# Largely AI-written. Edited by Luke Kuruvilla.
 
 
 class Item:
@@ -301,7 +318,8 @@ class Item:
         All four default to None if there's no location row yet.
         """
         row = self.db.execute(
-            "SELECT * FROM item_locations WHERE instance_id = ?", (self.instance_id,)
+            "SELECT * FROM item_locations WHERE instance_id = ?", (
+                self.instance_id,)
         ).fetchone()
 
         if row:
@@ -325,7 +343,8 @@ class Item:
         """
         non_null = sum(x is not None for x in [room_id, player_id, npc_id])
         if non_null != 1:
-            raise ValueError("Exactly one of room_id, player_id, npc_id must be set.")
+            raise ValueError(
+                "Exactly one of room_id, player_id, npc_id must be set.")
 
         self.db.execute(
             """
@@ -446,7 +465,8 @@ class Item:
         # Place the item somewhere (optional at creation time)
         if any(x is not None for x in [room_id, player_id, npc_id]):
             item = cls(new_id, db)
-            item._update_location(room_id=room_id, player_id=player_id, npc_id=npc_id)
+            item._update_location(
+                room_id=room_id, player_id=player_id, npc_id=npc_id)
         else:
             item = cls(new_id, db)
 
@@ -480,7 +500,8 @@ class Item:
         or if the item type doesn't support the slot.
         """
         if self.player_id is None:
-            raise ValueError("Cannot equip an item that isn't in a player's inventory.")
+            raise ValueError(
+                "Cannot equip an item that isn't in a player's inventory.")
 
         # Basic slot validation
         valid_slots = {"head", "body", "hands", "feet", "weapon"}
@@ -559,7 +580,8 @@ class Torch(Item):
         if self.torch_state["is_lit"]:
             raise ValueError(f"'{self.name}' is already lit.")
         if self.torch_state["burn_time"] <= 0:
-            raise ValueError(f"'{self.name}' has burned out and cannot be relit.")
+            raise ValueError(
+                f"'{self.name}' has burned out and cannot be relit.")
         self.db.execute(
             "UPDATE item_torch_instances SET is_lit = 1 WHERE instance_id = ?",
             (self.instance_id,),
@@ -598,6 +620,7 @@ class NpcTemplate:
     """
     The blueprint for an NPC type — shared data that never changes per-instance.
     e.g. "Goblin Scout" with its description, stats, and dialogue.
+    Stores the Platonic ideal of a creature.
     """
 
     def __init__(self, row):
@@ -605,6 +628,8 @@ class NpcTemplate:
         self.name = row["name"]
         self.description = row["description"]
         self.max_health = row["max_health"]
+        self.damage_min=row["damage_min"]
+        self.damage_max=row["damage_max"]
         self.is_aggressive = bool(row["is_aggressive"])
 
     @staticmethod
@@ -636,13 +661,16 @@ class NpcInstance:
         # Load the template so we can access name, description, etc. directly
         self.template = NpcTemplate.get_by_id(db, self.template_id)
         if self.template is None:
-            raise ValueError(f"No NPC template found for id={self.template_id}")
+            raise ValueError(
+                f"No NPC template found for id={self.template_id}")
 
         # Shortcuts so callers can do npc.name instead of npc.template.name
         self.name = self.template.name
         self.description = self.template.description
         self.max_health = self.template.max_health
         self.is_aggressive = self.template.is_aggressive
+        self.damage_min = self.template.damage_min
+        self.damage_max = self.template.damage_max
 
     # ── Properties ──────────────────────────────────────────────────────
 
@@ -653,10 +681,14 @@ class NpcInstance:
     # ── Factory / class-level queries ───────────────────────────────────
 
     @staticmethod
+    @staticmethod
     def get_by_id(db, instance_id):
-        row = db.execute(
-            "SELECT * FROM npc_instances WHERE id = ?", (instance_id,)
-        ).fetchone()
+        row = db.execute("""
+            SELECT ni.*, nt.damage_min, nt.damage_max
+            FROM npc_instances ni
+            JOIN npc_templates nt ON ni.template_id = nt.id
+            WHERE ni.id = ?
+        """, (instance_id,)).fetchone()
         return NpcInstance(row, db) if row else None
 
     @classmethod
@@ -714,14 +746,16 @@ class NpcInstance:
 
     def _kill(self, db):
         """Mark this NPC as dead in the database."""
-        db.execute("UPDATE npc_instances SET is_alive = 0 WHERE id = ?", (self.id,))
+        db.execute(
+            "UPDATE npc_instances SET is_alive = 0 WHERE id = ?", (self.id,))
         db.commit()
         self._is_alive = False
 
     def move_to_room(self, room_id: int, db):
         """Move this NPC to a different room."""
         db.execute(
-            "UPDATE npc_instances SET room_id = ? WHERE id = ?", (room_id, self.id)
+            "UPDATE npc_instances SET room_id = ? WHERE id = ?", (
+                room_id, self.id)
         )
         db.commit()
         self.room_id = room_id
@@ -737,7 +771,7 @@ class NpcInstance:
         """Short description shown when a player looks at this NPC."""
         status = "" if self.is_alive else " (dead)"
         return f"{self.name}{status} — {self.description}"
-    
+
     def set_aggro(self, db):
         import time
         self.is_aggro_to_player = 1
@@ -758,7 +792,7 @@ class NpcInstance:
             WHERE id = ?
         """, (self.id,))
         db.commit()
-        
+
     def __repr__(self):
         return (
             f"<NpcInstance id={self.id} '{self.name}' "

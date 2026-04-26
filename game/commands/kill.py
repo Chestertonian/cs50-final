@@ -1,7 +1,7 @@
 from game.commands.base import Command
 from game.models import NpcInstance, find_item_by_name
 from game.helpers import parse_target_and_index
-import time
+
 
 
 class KillCommand(Command):
@@ -13,7 +13,8 @@ class KillCommand(Command):
         # ─────────────────────────────
         # FIND NPC IN ROOM
         # ─────────────────────────────
-        room_npcs = NpcInstance.get_instances_in_room(player.current_room_id, db)
+        room_npcs = NpcInstance.get_instances_in_room(
+            player.current_room_id, db)
 
         if not room_npcs:
             return "There is nothing to fight here."

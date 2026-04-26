@@ -3,6 +3,7 @@
 from game.commands.base import Command
 import random
 
+
 class FleeCommand(Command):
     def execute(self, player, db, args):
         room = player.get_current_room(db)
@@ -11,7 +12,7 @@ class FleeCommand(Command):
         exits = room.get_visible_exits(db)
         if not exits:
             return "There is nowhere to flee to!"
-        direction=random.choice(exits)["direction"]
+        direction = random.choice(exits)["direction"]
         player.combat.end_combat()
         player.move(db, direction)
         print(player.get_current_room(db).describe(db))

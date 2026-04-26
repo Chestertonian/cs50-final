@@ -6,14 +6,16 @@ from game.helpers import get_db
 def get_wealth(player_id: int) -> int:
     """Return the player's current wealth balance."""
     db = get_db()
-    row = db.execute("SELECT wealth FROM players WHERE id = ?", (player_id,)).fetchone()
+    row = db.execute("SELECT wealth FROM players WHERE id = ?",
+                     (player_id,)).fetchone()
     return row["wealth"] if row else 0
 
 
 def add_wealth(player_id: int, amount: int) -> int:
     """Add wealth to a player. Returns new balance."""
     db = get_db()
-    db.execute("UPDATE players SET wealth = wealth + ? WHERE id = ?", (amount, player_id))
+    db.execute("UPDATE players SET wealth = wealth + ? WHERE id = ?",
+               (amount, player_id))
     db.commit()
     return get_wealth(player_id)
 
@@ -27,7 +29,8 @@ def spend_wealth(player_id: int, amount: int) -> bool:
     current = get_wealth(player_id)
     if current < amount:
         return False
-    db.execute("UPDATE players SET wealth = wealth - ? WHERE id = ?", (amount, player_id))
+    db.execute("UPDATE players SET wealth = wealth - ? WHERE id = ?",
+               (amount, player_id))
     db.commit()
     return True
 

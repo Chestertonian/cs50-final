@@ -2,6 +2,7 @@
 
 from game.commands.base import Command
 
+
 class ScoreCommand(Command):
     def execute(self, player, db, args):
         border = "═" * 47

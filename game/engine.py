@@ -1,6 +1,9 @@
 # game/engine.py
+import time
+
 from game.models import Player, Room
 from game.tick import process_ticks
+from game.combat.combat_loop import run_combat_round
 from game.commands.look import LookCommand
 from game.commands.save import SaveCommand
 from game.commands.score import ScoreCommand
@@ -22,6 +25,7 @@ from game.commands.kill import KillCommand
 from game.commands.flee import FleeCommand
 from game.commands.DevClearCombat import DevClearCombatCommand
 from game.commands.DevDeathCommand import DeathCommand
+from game.commands.DevAddHealth import AddHealthPointsCommand
 
 
 class GameEngine:
@@ -47,13 +51,14 @@ class GameEngine:
             "equip": EquipCommand(),
             "remove": RemoveCommand(),
             "hp": HpCommand(),
-            "add": AddMovementPointsCommand(),
+            "add_movement": AddMovementPointsCommand(),
             "ask": AskCommand(),
             "wealth": WealthCommand(),
             "kill": KillCommand(),
             "clear_combat": DevClearCombatCommand(),
             "flee": FleeCommand(),
             "die": DeathCommand(),
+            "add_health": AddHealthPointsCommand(),
         }
         self.aliases = {
             # directions
@@ -72,6 +77,9 @@ class GameEngine:
             "a": "wealth",
             "attack": "kill",
         }
+        self.last_combat_round = 0
+        self.combat_round_delay = 0.1  # seconds between rounds
+
 
     def run(self):
         """Start the main game loop."""
@@ -100,11 +108,17 @@ class GameEngine:
         input_list = user_input.split()
         command = input_list[0]
         args = input_list[1:]
-        
+
         # Handle tick if needed.
         tick_message = process_ticks(self.player, self.db)
         if tick_message:
             print(tick_message)
+        # Handle combat round if needed.
+        if self.player.combat.is_in_combat():
+            now = time.time()
+            if now - self.last_combat_round >= self.combat_round_delay:
+                run_combat_round(self.player, self.db)
+                self.last_combat_round = now
 
         # Alias directions.
         command = self.aliases.get(command, command)
