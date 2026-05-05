@@ -2,7 +2,8 @@
 
 # Am I somehow adding experience in this? Weird.
 
-from game.helpers import XP_TABLE
+import time
+from game.helpers import XP_TABLE, MAX_LEVEL
 
 RESPAWN_ROOM_ID = 206
 
@@ -12,6 +13,43 @@ from game.models import NpcInstance
 
 BARE_HANDS_MIN = 1
 BARE_HANDS_MAX = 3
+
+def check_level_up(player, db):
+    """Check if the player has enough XP to level up (possibly multiple times)."""
+    while player.level < MAX_LEVEL:
+        xp_needed = XP_TABLE.get(player.level)
+        if xp_needed is None:
+            break  # no entry in table means they're at the cap
+        if player.experience >= xp_needed:
+            player.level += 1
+            apply_level_up(player, db) 
+        else:
+            break
+        
+def apply_level_up(player, db):
+    """Apply the stat changes for a level-up and notify the player."""
+    print(f"\n*** You have reached level {player.level}! ***\n")
+
+    player.max_health += 5
+    player.max_power += 3
+    player.max_movement_points += 2
+
+    player.health = min(player.health + 10, player.max_health)
+
+    db.execute("""
+        UPDATE players
+        SET level = ?, max_health = ?, max_power = ?,
+            max_movement_points = ?, health = ?
+        WHERE id = ?
+    """, (
+        player.level,
+        player.max_health,
+        player.max_power,
+        player.max_movement_points,
+        player.health,
+        player.id,
+    ))
+    db.commit()
 
 def run_combat_round(player, db):
 
@@ -70,6 +108,7 @@ def run_combat_round(player, db):
 
 
 def handle_death(player, db):
+    player.combat.end_combat()
     # 1. XP loss
     xp_floor = XP_TABLE.get(player.level, 0)
     xp_loss = int(player.experience * 0.15)
@@ -135,6 +174,11 @@ def handle_npc_death(player, npc, db):
         "UPDATE npc_instances SET is_alive = 0, current_health = 0 WHERE id = ?",
         (npc.id,)
     )
+    db.execute("""
+        UPDATE npc_spawns
+        SET last_spawn_at = ?
+        WHERE template_id = ? AND room_id = ?
+        """, (time.time(), npc.template_id, npc.room_id))
     db.commit()
 
     # ─────────────────────────────
@@ -146,11 +190,13 @@ def handle_npc_death(player, npc, db):
     # ─────────────────────────────
     # AWARD XP
     # ─────────────────────────────
-    # TODO: add experience value to npc_templates and award it here
     # xp_gain = npc.experience_value
-    # player.experience += xp_gain
-    # db.execute("UPDATE players SET experience = ? WHERE id = ?", (player.experience, player.id))
-    # db.commit()
+    xp_gain = 50
+    player.experience += xp_gain
+    db.execute("UPDATE players SET experience = ? WHERE id = ?", (player.experience, player.id))
+    db.commit()
+    print(f"You gain {xp_gain} experience.")
+    check_level_up(player, db)
 
     # ─────────────────────────────
     # DROP ITEMS

@@ -103,6 +103,12 @@ class GameEngine:
         # Check if it's null (like always!)
         user_input = user_input.lower()
         if not user_input:
+            if self.player.combat.is_in_combat():
+                # still process combat tick
+                now = time.time()
+                if now - self.last_combat_round >= self.combat_round_delay:
+                    run_combat_round(self.player, self.db)
+                self.last_combat_round = now
             return ">"
         # Turn user input into a command, with arguments.
         input_list = user_input.split()
@@ -119,7 +125,7 @@ class GameEngine:
             if now - self.last_combat_round >= self.combat_round_delay:
                 run_combat_round(self.player, self.db)
                 self.last_combat_round = now
-
+        
         # Alias directions.
         command = self.aliases.get(command, command)
         # Did the user quit?
@@ -137,7 +143,7 @@ class GameEngine:
         exits = self.player.get_current_room(self.db).get_exits(self.db)
         exit_directions = [row["direction"] for row in exits]
         # If the command's in there, we move. Unless it's combat.
-        if self.player.combat.is_in_combat():
+        if command in exit_directions and self.player.combat.is_in_combat():
             print("One does not simply walk away from battle.")
             return False
         if command in exit_directions:

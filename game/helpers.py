@@ -4,6 +4,8 @@
 import textwrap
 import sqlite3
 
+MAX_LEVEL=20
+
 XP_TABLE = {
     1: 300,
     2: 500,
