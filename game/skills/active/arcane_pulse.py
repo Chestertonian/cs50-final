@@ -4,12 +4,10 @@ game/skills/active/arcane_pulse.py
 Arcane Pulse: level 4 wizard spell.
 
 Hits ALL living NPCs in the room simultaneously. Any NPC struck that
-isn't already fighting the player gets pulled into combat — so this
-spell can open a fight against multiple enemies at once, or catch
-adds that wandered in mid-fight.
+isn't already fighting the player gets pulled into combat.
 
-Damage:    2-6 base per target, +1 per 4 INT above 10.
-Disorient: 35% chance per target (hook for future status effects).
+Damage:    2-5 base per target, +1 per 4 INT above 10.
+Disorient: 35% chance per target. (Currently meaningless)
 """
 
 import random
@@ -48,7 +46,7 @@ class ArcanePulse(Skill):
             # Pull into combat if not already fighting player.
             player.combat.start_combat(npc["id"])
 
-            damage     = random.randint(2, 6) + int_bonus
+            damage     = random.randint(2, 5) + int_bonus
             new_health = npc["current_health"] - damage
             killed     = new_health <= 0
             disoriented = (not killed) and (random.random() < self.DISORIENT_CHANCE)

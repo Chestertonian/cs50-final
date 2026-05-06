@@ -1,6 +1,8 @@
+# game/login.py
+# Handles login
+
 import hashlib
 import sys
-import sqlite3
 
 
 def login_screen(db):

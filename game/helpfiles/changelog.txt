@@ -132,4 +132,27 @@ May 5, 2026:
 
 - Creating wizard class (first spell was magic missile.)
 
+- New helpfiles.
+
+- New powers.
+
+- 'Powers' command.
+
 - Squashing bugs
+
+
+May 6, 2026:
+
+- Gains on level-up are now stat-dependent (high STR character will get more HP, e.g.)
+
+- More spells (wizard class almost finished.)
+
+- Aggressive monsters now exist.
+
+- Ticks updated.
+
+- Finished wizard class.
+
+- XP values.
+
+- Templates for all monsters in the cave.

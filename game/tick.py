@@ -3,10 +3,10 @@ from game.spawner import run_spawns
 
 # --- Configuration ---
 TICK_INTERVAL = 20
-HP_PER_TICK = 1
-SP_PER_TICK = 1
+HP_PER_TICK = 2
+SP_PER_TICK = 2
 MP_PER_TICK = 2
-MAX_TICKS_AT_ONCE = 10
+MAX_TICKS_AT_ONCE = 20
 
 
 def process_ticks(player, db):

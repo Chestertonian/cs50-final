@@ -3,15 +3,11 @@ game/skills/active/greater_fireball.py
 
 Greater Fireball: level 15 wizard spell.
 
-An intensified fireball of devastating power. Hits all enemies in
-the room like Fireball, but with higher damage and a burn effect:
-each surviving NPC takes a small additional tick of fire damage
-next round (stored in result dict as a hook for your status system).
+An intensified fireball of devastating power.
 
-Primary damage:  14-32 base per target, +1 per 2 INT above 10.
-Burn damage:     2-5 (applied next round — TODO: status system hook).
+Primary damage:  16-36 base per target, +1 per 2 INT above 10.
 Miss:            None.
-Cost:            25 power.
+Cost:            40 power.
 """
 
 import random
@@ -40,6 +36,7 @@ class GreaterFireball(Skill):
         int_bonus = max(0, (player.stats["INT"] - 10) // 2)
 
         lines = [
+            "\n"
             "You draw deeply on your arcane reserves.",
             "A massive bead of fire erupts from your outstretched hand —",
             "the air itself ignites as it detonates in a cataclysmic inferno!",
@@ -47,7 +44,6 @@ class GreaterFireball(Skill):
 
         any_killed = False
         killed_ids = []
-        burning_ids = []  # surviving NPCs that are now burning
 
         for npc in npcs:
             player.combat.start_combat(npc["id"])
@@ -68,10 +64,8 @@ class GreaterFireball(Skill):
                     f"  {npc['npc_name']} is consumed by the inferno for {damage} damage!"
                 )
             else:
-                burn_damage = random.randint(2, 5)
-                burning_ids.append({"id": npc["id"], "burn_damage": burn_damage})
                 lines.append(
-                    f"  {npc['npc_name']} is engulfed for {damage} damage and is burning!"
+                    f"  {npc['npc_name']} is engulfed for {damage} damage!"
                 )
 
         db.commit()
@@ -81,7 +75,4 @@ class GreaterFireball(Skill):
             "killed":      any_killed,
             "killed_ids":  killed_ids,
             "target_id":   player.combat.primary_target_id,
-            "burning_ids": burning_ids,
-            # TODO: apply burn status to each entry in burning_ids so the
-            # combat loop deals burn_damage to them next round.
         }

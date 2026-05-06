@@ -1,6 +1,6 @@
 # game/combat/combat_loop.py
 
-# Am I somehow adding experience in this? Weird.
+# Includes player leveling up.
 
 import time
 from game.helpers import XP_TABLE, MAX_LEVEL
@@ -14,6 +14,7 @@ from game.models import NpcInstance
 BARE_HANDS_MIN = 1
 BARE_HANDS_MAX = 3
 
+
 def check_level_up(player, db):
     """Check if the player has enough XP to level up (possibly multiple times)."""
     while player.level < MAX_LEVEL:
@@ -22,34 +23,65 @@ def check_level_up(player, db):
             break  # no entry in table means they're at the cap
         if player.experience >= xp_needed:
             player.level += 1
-            apply_level_up(player, db) 
+            apply_level_up(player, db)
         else:
             break
-        
+
+
 def apply_level_up(player, db):
-    """Apply the stat changes for a level-up and notify the player."""
+    """Apply stat changes for a level-up and notify the player."""
     print(f"\n*** You have reached level {player.level}! ***\n")
 
-    player.max_health += 5
-    player.max_power += 3
-    player.max_movement_points += 2
+    def stat_bonus(stat):
+        # Smooth scaling, no penalties, no negatives
+        # Every 4 stat points above 10 = +1 bonus
+        return max((stat - 10) / 4, 0)
 
+    def level_gain(base, stats):
+        return base + sum(stat_bonus(s) for s in stats)
+
+    # --- HP (STR / CON / DEX) ---
+    hp_gain = level_gain(3, [
+        player.stats["STR"],
+        player.stats["CON"],
+        player.stats["DEX"]
+    ])
+
+    player.max_health += round(hp_gain)
+
+    # --- MP / Power (INT / WIS / CHA) ---
+    sp_gain = level_gain(3, [
+        player.stats["INT"],
+        player.stats["WIS"],
+        player.stats["CHA"]
+    ])
+
+    player.max_power += round(sp_gain)
+
+    # --- Movement
+    player.max_movement_points += 3
+
+    # --- Heal on level up
     player.health = min(player.health + 10, player.max_health)
-
-    db.execute("""
+    
+    db.execute(
+        """
         UPDATE players
         SET level = ?, max_health = ?, max_power = ?,
             max_movement_points = ?, health = ?
         WHERE id = ?
-    """, (
-        player.level,
-        player.max_health,
-        player.max_power,
-        player.max_movement_points,
-        player.health,
-        player.id,
-    ))
+    """,
+        (
+            player.level,
+            player.max_health,
+            player.max_power,
+            player.max_movement_points,
+            player.health,
+            player.id,
+        ),
+    )
     db.commit()
+
 
 def run_combat_round(player, db):
 
@@ -75,7 +107,7 @@ def run_combat_round(player, db):
     npc.current_health -= damage
     db.execute(
         "UPDATE npc_instances SET current_health = ? WHERE id = ?",
-        (npc.current_health, npc.id)
+        (npc.current_health, npc.id),
     )
     db.commit()
 
@@ -98,13 +130,8 @@ def run_combat_round(player, db):
         handle_death(player, db)
         return
 
-    db.execute(
-        "UPDATE players SET health = ? WHERE id = ?",
-        (player.health, player.id)
-    )
+    db.execute("UPDATE players SET health = ? WHERE id = ?", (player.health, player.id))
     db.commit()
-
-
 
 
 def handle_death(player, db):
@@ -115,13 +142,16 @@ def handle_death(player, db):
     player.experience = max(xp_floor, player.experience - xp_loss)
 
     # 2 & 3. Drop all items (carried and equipped) into the death room
-    db.execute("""
+    db.execute(
+        """
         UPDATE item_locations
         SET room_id = ?,
             player_id = NULL,
             equipped_slot = NULL
         WHERE player_id = ?
-    """, (player.current_room_id, player.id))
+    """,
+        (player.current_room_id, player.id),
+    )
 
     # 4. Restore HP to 10% (minimum 1)
     player.health = max(1, int(player.max_health * 0.10))
@@ -130,11 +160,14 @@ def handle_death(player, db):
     player.current_room_id = RESPAWN_ROOM_ID
 
     # 6. Save to DB
-    db.execute("""
+    db.execute(
+        """
         UPDATE players
         SET health = ?, current_room_id = ?, experience = ?
         WHERE id = ?
-    """, (player.health, player.current_room_id, player.experience, player.id))
+    """,
+        (player.health, player.current_room_id, player.experience, player.id),
+    )
     db.commit()
 
     # 7. Message
@@ -165,6 +198,7 @@ def handle_death(player, db):
     print(f"You lost {xp_loss} experience.")
     print("You wake up without your belongings, alas.\n")
 
+
 def handle_npc_death(player, npc, db):
 
     # ─────────────────────────────
@@ -172,13 +206,16 @@ def handle_npc_death(player, npc, db):
     # ─────────────────────────────
     db.execute(
         "UPDATE npc_instances SET is_alive = 0, current_health = 0 WHERE id = ?",
-        (npc.id,)
+        (npc.id,),
     )
-    db.execute("""
+    db.execute(
+        """
         UPDATE npc_spawns
         SET last_spawn_at = ?
         WHERE template_id = ? AND room_id = ?
-        """, (time.time(), npc.template_id, npc.room_id))
+        """,
+        (time.time(), npc.template_id, npc.room_id),
+    )
     db.commit()
 
     # ─────────────────────────────
@@ -190,10 +227,11 @@ def handle_npc_death(player, npc, db):
     # ─────────────────────────────
     # AWARD XP
     # ─────────────────────────────
-    # xp_gain = npc.experience_value
-    xp_gain = 50
+    xp_gain = npc.experience_value
     player.experience += xp_gain
-    db.execute("UPDATE players SET experience = ? WHERE id = ?", (player.experience, player.id))
+    db.execute(
+        "UPDATE players SET experience = ? WHERE id = ?", (player.experience, player.id)
+    )
     db.commit()
     print(f"You gain {xp_gain} experience.")
     check_level_up(player, db)
@@ -204,4 +242,4 @@ def handle_npc_death(player, npc, db):
     # TODO: implement when NPC inventory is ready
     # move all items in item_locations where npc_id = npc.id to npc's room
 
-    print(f"\n{npc.name} is dead!\n")
+    print(f"\n{npc.name.capitalize()} is dead!\n")

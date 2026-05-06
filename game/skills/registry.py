@@ -22,8 +22,21 @@ from game.skills.active.greater_fireball import GreaterFireball
 from game.skills.active.jab import Jab
 from game.skills.active.strike import Strike
 from game.skills.active.slash import Slash
-
-
+from game.skills.active.shield import Shield
+from game.skills.active.mage_armor import MageArmor
+from game.skills.active.flame_shield import FlameShield
+from game.skills.active.slow import Slow
+from game.skills.active.arcane_blast import ArcaneBlast
+from game.skills.active.stoneskin import Stoneskin
+from game.skills.active.true_sight import TrueSight
+from game.skills.active.recall import Recall
+from game.skills.active.mass_slow import MassSlow
+from game.skills.active.meteor_storm import MeteorStorm
+from game.skills.active.swift_feet import SwiftFeet
+from game.skills.active.earthen_fist import EarthenFist
+from game.skills.active.arcane_drain import ArcaneDrain
+from game.skills.active.mirror_image import MirrorImage
+from game.skills.active.arcane_weakness import ArcaneWeakness
 
 SKILL_CLASS_MAP = {
     "magicmissile": MagicMissile,
@@ -40,6 +53,21 @@ SKILL_CLASS_MAP = {
     "jab": Jab,
     "slash": Slash,
     "strike": Strike,
+    "shield": Shield,
+    "magearmor": MageArmor,
+    "flameshield": FlameShield,
+    "slow": Slow,
+    "arcaneblast": ArcaneBlast,
+    "stoneskin": Stoneskin,
+    "truesight": TrueSight,
+    "recall": Recall,
+    "massslow": MassSlow,
+    "meteorstorm": MeteorStorm,
+    "swiftfeet": SwiftFeet,
+    "earthenfist":    EarthenFist,
+    "arcanedrain":    ArcaneDrain,
+    "mirrorimage":  MirrorImage,
+    "arcaneweakness": ArcaneWeakness,
 }
  
 # These get populated by load_skills() at startup.

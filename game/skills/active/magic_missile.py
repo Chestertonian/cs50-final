@@ -12,24 +12,20 @@ from game.helpers import get_npc_name
 class MagicMissile(Skill):
     """
     Damage formula:
-      base:  2-6
+      base:  3-6
       bonus: +1 for every 4 points of INT above 10
               e.g. INT 14 → +1, INT 18 → +2
     """
  
     def execute(self, player, target, db):
-        """
-        player: Player object (has .power, .int_stat, etc.)
-        target: a dict/Row representing the npc_instance the player is fighting
-        db:     sqlite3 connection
-        """
+
         if target is None:
             return {"message": "Cast at whom?", "killed": False}
         # --- 1. Deduct power cost ---
         player.power -= self.power_cost
  
         # --- 2. Calculate damage ---
-        base_damage = random.randint(2, 6)
+        base_damage = random.randint(3, 6)
         int_bonus   = max(0, (player.stats["INT"] - 10) // 4)
         damage      = base_damage + int_bonus
  

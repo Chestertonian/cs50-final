@@ -158,8 +158,7 @@ class Player:
                 print("The door is locked.")
                 return False
             print("You unlock the door.")
-        # optional: use room movement cost (fallback to 1 if None)
-        cost = 1  # later you can replace with room-based cost
+        cost = 1  # TODO: replace with room-based cost
 
         if self.movement_points < cost:
             print("You don't have enough movement points.")
@@ -185,6 +184,11 @@ class Player:
             if npc.is_aggro_to_player:
                 if time.time() - npc.aggro_since > AGGRO_TIMER:
                     npc.clear_aggro(db)
+                    
+        for instance in NpcInstance.get_instances_in_room(self.current_room_id, db):
+            if instance.is_aggressive:
+                print(f"{instance.name} attacks you!")
+                self.combat.start_combat(instance.id)
         for instance in NpcInstance.get_instances_in_room(self.current_room_id, db):
             if instance.is_aggro_to_player:
                 # A thing happens. Deal damage. attack_roll()
@@ -633,6 +637,7 @@ class NpcTemplate:
         self.damage_min=row["damage_min"]
         self.damage_max=row["damage_max"]
         self.is_aggressive = bool(row["is_aggressive"])
+        self.xp=row["xp"]
 
     @staticmethod
     def get_by_id(db, template_id):
@@ -673,6 +678,7 @@ class NpcInstance:
         self.is_aggressive = self.template.is_aggressive
         self.damage_min = self.template.damage_min
         self.damage_max = self.template.damage_max
+        self.experience_value = self.template.xp
 
     # ── Properties ──────────────────────────────────────────────────────
 

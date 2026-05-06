@@ -10,7 +10,7 @@ class HelpCommand(Command):
         if not args:
             self.show_all_help(player, db)
         else:
-            self.show_specific_help(player, db, args[0])
+            self.show_specific_help(player, db, args)
 
     def show_all_help(self, player, db):
         """
@@ -28,7 +28,8 @@ class HelpCommand(Command):
         try:
             txt_files = [f.stem for f in help_dir.iterdir(
             ) if f.is_file() and f.suffix == ".txt"]
-            topics = sorted(txt_files)
+            topics = sorted([f.stem.replace("_", " ") for f in help_dir.iterdir()
+                 if f.is_file() and f.suffix == ".txt"])
         except PermissionError:
             print("\n--------- Help Index ---------\n")
             print("Permission denied: Unable to read help directory.")
@@ -72,8 +73,9 @@ class HelpCommand(Command):
         print(f"\nTotal topics: {len(topics)}")
         print("---------------------------------------\n")
 
-    def show_specific_help(self, player, db, topic):
-        filename = topic.strip().lower() + ".txt"
+    def show_specific_help(self, player, db, args):
+        topic = "_".join(args).strip().lower()   # ["get", "item"] → "get_item"
+        filename = topic + ".txt"
         current_file_dir = Path(__file__).parent
         help_dir = current_file_dir.parent / "helpfiles"
         file_path = help_dir / filename

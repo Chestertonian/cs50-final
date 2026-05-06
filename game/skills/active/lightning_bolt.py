@@ -4,14 +4,12 @@ game/skills/active/lightning_bolt.py
 Lightning Bolt: level 11 wizard spell.
 
 Unlike Fireball, Lightning Bolt is single-target but hits harder
-against one enemy. It has a chance to stun — the NPC skips its
-next attack (tracked via a flag on the combat state).
+against one enemy.
 
-Damage:  10-24 base, +1 per 3 INT above 10.
+Damage:  20-28 base, +1 per 3 INT above 10.
 Stun:    25% chance. The stunned NPC ID is returned so the combat
-         loop can skip it. Hook into your status effect system here
-         when ready — for now it's returned in the result dict.
-Miss:    10% chance (lightning is fast but can arc wide).
+         loop can skip it. Not used now
+Miss:    10% chance.
 """
 
 import random

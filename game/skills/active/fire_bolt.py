@@ -3,7 +3,7 @@ game/skills/active/fire_bolt.py
 
 Fire Bolt: level 4 wizard spell.
 
-Damage: 4-10 base, +1 per 3 INT above 10.
+Damage: 4-7 base, +1 per 3 INT above 10.
 Miss chance: 15% (reduced by DEX maybe, but keeping it simple for now).
 """
 
@@ -33,7 +33,7 @@ class FireBolt(Skill):
         player.power -= self.power_cost
 
         # --- 3. Calculate damage ---
-        base_damage = random.randint(4, 10)
+        base_damage = random.randint(4, 7)
         int_bonus   = max(0, (player.stats["INT"] - 10) // 3)
         damage      = base_damage + int_bonus
 
