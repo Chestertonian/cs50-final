@@ -1,0 +1,9 @@
+'web'
+'web <target>'
+
+------------------------------------
+
+You conjure thick, adhesive strands that bind your target in place. The web clings tightly and can hold even a struggling opponent for a short time.
+
+Power Cost: ___
+Level Attained: ___

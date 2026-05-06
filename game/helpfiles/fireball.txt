@@ -1,0 +1,12 @@
+'fireball'
+'fireball <target>'
+
+------------------------------------
+
+You form a terrible sphere of fire that travels outward before erupting in a violent explosion. The blast deals heavy damage and can strike multiple targets within its radius.
+
+This spell is powerful but demands situational awareness. Many inexperienced casters have learned too late that its reach extends beyond a single enemy.
+
+Power Cost: ___
+Level Attained: ___
+

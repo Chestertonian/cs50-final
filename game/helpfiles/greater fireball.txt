@@ -1,0 +1,9 @@
+'greaterfireball'
+'greaterfireball <target>'
+
+------------------------------------
+
+You conjure a larger, more volatile sphere of flame that detonates with devastating force. The explosion covers a wide area and delivers significantly increased damage.
+
+Power Cost: ___
+Level Attained: ___

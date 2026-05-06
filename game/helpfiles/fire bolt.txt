@@ -1,0 +1,10 @@
+'firebolt'
+'firebolt <target>'
+
+------------------------------------
+
+You hurl a focused bolt of flame that strikes your target and burns on impact. The spell is quick to form and releases with little delay, making it useful in fast-paced combat.
+
+Power Cost: ___
+Level Attained: ___
+

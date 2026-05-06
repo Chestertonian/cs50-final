@@ -1,0 +1,12 @@
+'greatermagicmissile'
+'greatermagicmissile <target>'
+
+------------------------------------
+
+You unleash an enhanced volley of arcane missiles, each striking with greater force than the basic form. The spell retains its accuracy while significantly increasing its damage.
+
+This version represents a refinement of the original technique, building on the same principles while pushing them further.
+
+Power Cost: ___
+Level Attained: ___
+

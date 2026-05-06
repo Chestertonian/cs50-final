@@ -1,0 +1,10 @@
+'invisibility'
+'invisibility'
+
+------------------------------------
+
+You bend light and dull awareness around yourself, becoming unseen for a short duration. Leaving combat removes this effect.
+
+Power Cost: ___
+Level Attained: ___
+

@@ -1,0 +1,11 @@
+'strike'
+'strike <target>'
+
+------------------------------------
+
+You deliver a solid, controlled attack that balances force and accuracy. The motion is deliberate and dependable, making it useful in a wide range of situations.
+
+It is commonly taught to rangers as a core technique, emphasizing consistency over specialization.
+
+Power Cost: ___
+Level Attained: 1

@@ -196,7 +196,7 @@ class Player:
     def save(self, db):
         db.execute(
             """UPDATE players SET current_room_id = ?, health = ?,
-            max_health = ?, level = ?, experience = ?, str_stat = ?,
+            max_health = ?, power = ?, max_power = ?, level = ?, experience = ?, str_stat = ?,
             con_stat = ?, dex_stat = ?, int_stat = ?, wis_stat = ?,
             cha_stat = ?, traits = ?, updated_at = CURRENT_TIMESTAMP
             WHERE id = ?""",
@@ -204,6 +204,8 @@ class Player:
                 self.current_room_id,
                 self.health,
                 self.max_health,
+                self.power, 
+                self.max_power,
                 self.level,
                 self.experience,
                 self.stats["STR"],

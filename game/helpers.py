@@ -95,3 +95,12 @@ def parse_target_and_index(args: list[str]) -> tuple[str, int]:
     if args and args[-1].isdigit():
         return " ".join(args[:-1]), int(args[-1])
     return " ".join(args), 1
+
+def get_npc_name(target, db):
+    row = db.execute(
+        """SELECT npc_templates.name FROM npc_instances
+           JOIN npc_templates ON npc_instances.template_id = npc_templates.id
+           WHERE npc_instances.id = ?""",
+        (target["id"],)
+    ).fetchone()
+    return row["name"] if row else "your target"

@@ -1,0 +1,9 @@
+'shock'
+'shock <target>'
+
+------------------------------------
+
+You deliver a quick jolt of electrical energy that damages and can stun your target. The spell is fast to cast and requires minimal preparation.
+
+Power Cost: ___
+Level Attained: ___

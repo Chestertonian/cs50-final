@@ -1,0 +1,11 @@
+'slash'
+'slash <target>'
+
+------------------------------------
+
+You perform a straightforward melee attack with a bladed weapon, delivering a clean and controlled cut. The motion is simple, but effective when executed properly.
+
+It serves as a foundational technique for knights, forming the basis of more advanced weapon skills learned over time.
+
+Power Cost: ___
+Level Attained: 1

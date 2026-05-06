@@ -1,0 +1,11 @@
+'magicmissile'
+'magicmissile <target>'
+
+------------------------------------
+
+You release a dart of arcane force that strikes its target without fail. The energy forms cleanly and travels in a straight, unwavering path, making it one of the most reliable offensive spells available. It requires focus rather than strength, and rarely misfires when properly cast.
+
+Because of its consistency, it is widely taught to apprentices as a first lesson in shaping raw magic into a controlled effect.
+
+Power Cost: ___
+Level Attained: ___

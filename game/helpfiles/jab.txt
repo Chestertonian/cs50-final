@@ -1,0 +1,12 @@
+'jab'
+'jab <target>'
+
+------------------------------------
+
+You make a quick, underhand thrust aimed at your target. The attack is fast, allowing you to strike and recover quickly.
+
+This technique is favored in situations where speed and precision are more important than raw force. It is said to have originated from the tactics of street thugs.
+
+Power Cost: ___
+Level Attained: 1
+

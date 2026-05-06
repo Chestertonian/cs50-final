@@ -118,3 +118,18 @@ April 22, 2026:
 April 25, 2026:
 
 - Beginnings of combat system starting to emerge -- flee command, attack, etc. Actual damage dealing yet to be dealt with.
+
+
+
+April 27, 2026:
+
+- Combat system basically working.
+
+
+May 5, 2026:
+
+- Combat more fully works
+
+- Creating wizard class (first spell was magic missile.)
+
+- Squashing bugs

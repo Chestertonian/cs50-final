@@ -1,0 +1,12 @@
+'lightningbolt'
+'lightningbolt <target>'
+
+------------------------------------
+
+You call down a concentrated bolt of lightning that strikes your target with speed and force. The impact is immediate, leaving little time for reaction once the spell is released.
+
+Its form is commonly attributed to the dwarven scholar Halvek, whose work focused on reproducing natural lightning through controlled arcane channels.
+
+Power Cost: ___
+Level Attained: ___
+

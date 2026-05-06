@@ -1,0 +1,9 @@
+'arcanepulse'
+'arcanepulse <target>'
+
+------------------------------------
+
+You release a burst of raw magical force that strikes all of those present in the area with you. The energy is quite forceful, producing a possibility of confusing your enemy.
+
+Power Cost: ___
+Level Attained: ___

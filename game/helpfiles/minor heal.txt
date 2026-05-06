@@ -1,0 +1,12 @@
+'minorheal'
+'minorheal <target>'
+
+------------------------------------
+
+You channel a small flow of restorative energy into yourself or another, closing minor wounds and restoring some vitality. The effect is steady rather than dramatic, making it best used early rather than as a last resort.
+
+While limited in strength, it is valued for its efficiency and ease of use, especially on long journeys where greater magic is not always practical.
+
+Power Cost: ___
+Level Attained: ___
+
