@@ -87,9 +87,12 @@ Overall, I achieved all of the goals that I wanted to.
 ## Acknowledgments
 Any resources, libraries, or inspiration.
 
-## File tree
+## Project Structure
+
 <details>
-  <summary>File tree (pycache files removed, a few other unnecessary ones)</summary>
+<summary>Click to expand full directory tree</summary>
+
+```text
 cs50-final
 │   .gitignore
 │   DESIGN.md
@@ -99,6 +102,7 @@ cs50-final
 │   __main__.py
 │
 ├── creative-information
+│       monastery_idea.txt
 │       world_info.txt
 │
 ├── db
@@ -252,7 +256,8 @@ cs50-final
 │   │       guilds_screen.txt
 │   │       races_screen.txt
 │   │
-│   └── __init__.py (via package init only; no pycache shown)
+│   └── __init__.py
 │
 └── __main__.py
+```
 </details>
