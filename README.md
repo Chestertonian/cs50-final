@@ -1,4 +1,4 @@
-# Wayfarer 1.0
+# Wayfarer 0.1
 
 > *It's called Wayfarer because it doesn't feature very much wayfaring.*
 
