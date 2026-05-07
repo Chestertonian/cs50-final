@@ -1,0 +1,19 @@
+Syntax: 
+
+'hp'
+
+------------------------------------
+
+SP is the resource used to cast spells/use skills.
+
+Each spell has a SP cost. You must have enough SP to cast the spell.
+
+You begin with a small amount of SP, and it increases as you level up.
+
+SP is shared across all spellcasting/skill abilities, meaning you must manage it carefully during combat.
+
+If you run out of SP, you cannot cast spells until it is restored.
+
+SP represents your magical or mental energy depending on your character type.
+
+Related files: help spells, help regeneration, help combat.

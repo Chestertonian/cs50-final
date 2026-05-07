@@ -1,0 +1,13 @@
+Syntax: 
+
+'truesight'
+
+------------------------------------
+
+Truesight allows the caster to perceive hidden, invisible, or illusionary entities.
+
+It counters stealth and deception-based effects.
+
+This spell does not deal damage or provide direct combat advantage, but improves awareness.
+
+Related files: help invisibility, help senses, help spells.

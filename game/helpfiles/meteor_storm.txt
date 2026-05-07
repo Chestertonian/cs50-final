@@ -1,0 +1,14 @@
+Syntax: 
+
+'meteorstorm,' 'meteorstorm <target>,'
+
+------------------------------------
+
+Meteor Storm calls down several falling meteors that strike all enemies in a wide area.
+
+It is one of the most powerful destructive spells ever learned, and was first practiced by ancient wizards.
+
+This spell deals massive damage but consumes large amounts of SP.
+
+
+Related files: help greaterfireball, help spells, help combat.

@@ -15,7 +15,6 @@ from game.skills.active.minor_heal import MinorHeal
 from game.skills.active.fireball import Fireball
 from game.skills.active.lightning_bolt import LightningBolt
 from game.skills.active.web import Web
-from game.skills.active.shock import Shock
 from game.skills.active.invisibility import Invisibility
 from game.skills.active.greater_magic_missile import GreaterMagicMissile
 from game.skills.active.greater_fireball import GreaterFireball
@@ -37,6 +36,7 @@ from game.skills.active.earthen_fist import EarthenFist
 from game.skills.active.arcane_drain import ArcaneDrain
 from game.skills.active.mirror_image import MirrorImage
 from game.skills.active.arcane_weakness import ArcaneWeakness
+from game.skills.active.cataclysm import Cataclysm
 
 SKILL_CLASS_MAP = {
     "magicmissile": MagicMissile,
@@ -46,7 +46,6 @@ SKILL_CLASS_MAP = {
     "fireball":     Fireball,
     "lightningbolt": LightningBolt,
     "web": Web,
-    "shock": Shock,
     "invisibility":        Invisibility,
     "greatermagicmissile": GreaterMagicMissile,
     "greaterfireball":     GreaterFireball,
@@ -68,6 +67,8 @@ SKILL_CLASS_MAP = {
     "arcanedrain":    ArcaneDrain,
     "mirrorimage":  MirrorImage,
     "arcaneweakness": ArcaneWeakness,
+    "recall": Recall,
+    "cataclysm": Cataclysm,
 }
  
 # These get populated by load_skills() at startup.

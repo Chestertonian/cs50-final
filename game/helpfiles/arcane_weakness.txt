@@ -1,0 +1,9 @@
+Syntax: 
+
+'arcaneweakness,' 'arcaneweakness <target>'
+
+------------------------------------
+
+Arcane Weakness reduces a target’s resistance to damage.
+
+Related files: help spells, help arcanedrain.

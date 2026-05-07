@@ -1,0 +1,24 @@
+Syntax: 
+
+'attack <target>'
+
+------------------------------------
+
+Combat is turn-based. Each round, you and your opponent exchange actions until one side is defeated.
+
+On your turn, you may:
+- Cast a spell
+- Use an ability or item (if available)
+- Take any other action.
+
+In between turns, you and your enemy will strike at one another with your weapons (or bare hands.)
+
+Hit chance is determined by your combat skills and attributes. Even strong attacks may sometimes miss, and weaker enemies may occasionally land hits.
+
+Damage is reduced by armor and defensive effects. All damage has a small variance to make combat less predictable.
+
+Fights are designed to last several rounds. Strong enemies may require multiple tactics.
+
+Multiple enemies may attack at once in group encounters.
+
+Related files: help spells, help mana, help regeneration, help stats.

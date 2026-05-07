@@ -156,3 +156,11 @@ May 6, 2026:
 - XP values.
 
 - Templates for all monsters in the cave.
+
+- More helpfiles.
+
+- Seeded cave.
+
+- Custom movement costs.
+
+- Invisibility now functional

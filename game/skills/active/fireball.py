@@ -44,9 +44,7 @@ class Fireball(Skill):
         for npc in npcs:
             # Pull into combat.
             if npc["id"] not in player.combat.attacker_ids:
-                player.combat.add_attacker(npc["id"])
-                if not player.combat.is_in_combat():
-                    player.combat.start_combat(npc["id"])
+                player.combat.start_combat(npc["id"], player)
 
             damage     = random.randint(8, 18) + int_bonus
             new_health = npc["current_health"] - damage

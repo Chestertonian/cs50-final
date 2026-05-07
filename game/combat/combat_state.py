@@ -6,11 +6,17 @@ class CombatState:
         self.primary_target_id = None   # NPC instance id
         self.attacker_ids = []          # all NPC instance ids attacking the player
 
-    def start_combat(self, npc_id):
+    def start_combat(self, npc_id, player=None):
         if npc_id not in self.attacker_ids:
             self.attacker_ids.append(npc_id)
         if self.primary_target_id is None:
             self.primary_target_id = npc_id
+                
+        # Break invisibility when combat starts.
+        if player and getattr(player, "invisible_ticks_remaining", 0) > 0:
+            player.invisible_ticks_remaining = 0
+            print("Your invisibility fades as combat begins.")
+
 
     def end_combat(self):
         self.primary_target_id = None

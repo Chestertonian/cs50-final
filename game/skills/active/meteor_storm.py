@@ -39,7 +39,7 @@ class MeteorStorm(Skill):
         int_bonus = max(0, (player.stats["INT"] - 10) // 2)
 
         lines = [
-            "You raise both hands to the heavens and speak the ancient words.",
+            "\nYou raise both hands to the heavens and speak the ancient words.",
             "The sky tears open. Streaks of fire scream downward —",
             "METEOR STORM!",
             "",
@@ -74,7 +74,7 @@ class MeteorStorm(Skill):
             if hp <= 0:
                 any_killed = True
                 killed_ids.append(npc_id)
-                player.combat.start_combat(npc_id)  # ensure they're in combat for death handling
+                player.combat.start_combat(npc_id, player)  # ensure they're in combat for death handling
 
         db.commit()
 

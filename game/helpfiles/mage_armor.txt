@@ -1,0 +1,9 @@
+Syntax: 
+
+'magearmor'
+
+------------------------------------
+
+Mage Armor surrounds the target with a sustained layer of magical protection.
+
+Related files: help shield, help stoneskin, help combat.

@@ -1,0 +1,12 @@
+Syntax: 
+
+'massslow'
+
+------------------------------------
+
+Mass Slow reduces the speed and reaction time of all enemies in an area.
+
+Affected enemies act less frequently.
+
+
+Related files: help slow, help web, help combat.

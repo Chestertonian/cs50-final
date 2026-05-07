@@ -27,6 +27,7 @@ from game.commands.powers import PowersCommand
 from game.commands.DevClearCombat import DevClearCombatCommand
 from game.commands.DevDeathCommand import DeathCommand
 from game.commands.DevAddHealth import AddHealthPointsCommand
+from game.commands.DevAddSP import AddSPCommand
 from game.skills.registry import ACTIVE_SKILLS, load_skills
 
 
@@ -54,6 +55,7 @@ class GameEngine:
             "remove": RemoveCommand(),
             "hp": HpCommand(),
             "add_movement": AddMovementPointsCommand(),
+            "add_sp": AddSPCommand(),
             "ask": AskCommand(),
             "wealth": WealthCommand(),
             "kill": KillCommand(),

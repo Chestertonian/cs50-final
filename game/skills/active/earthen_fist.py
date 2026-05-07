@@ -3,12 +3,7 @@ game/skills/active/earthen_fist.py
 
 Earthen Fist: level 8 wizard spell.
 
-A fist of conjured stone slams into the target for solid damage
-and has a chance to stun — knocking them off balance. Thematically
-distinct from the fire/lightning/arcane spells: earth magic is slow,
-heavy, and physical.
-
-No INT scaling — earth magic is blunt force, not finesse.
+No INT scaling.
 Stun chance: 35% (stored in result dict for future status system).
 Damage: 8-16 flat.
 Cost:   12 power.

@@ -38,6 +38,6 @@ class KillCommand(Command):
         # ─────────────────────────────
         # START COMBAT
         # ─────────────────────────────
-        player.combat.start_combat(npc_match.id)
+        player.combat.start_combat(npc_match.id, player)
         npc_match.set_aggro(db)
         return f"You lunge at {npc_match.name}!"

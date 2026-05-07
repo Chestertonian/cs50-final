@@ -1,0 +1,11 @@
+Syntax: 
+
+'mirrorimage' 
+
+------------------------------------
+
+Mirror Image creates illusory duplicates of the caster that may confuse attackers.
+
+Enemies may strike illusions instead of the real target.
+
+Related files: help shield, help invisibility, help combat.

@@ -1,0 +1,13 @@
+Syntax: 
+
+'shield'
+
+------------------------------------
+
+Shield creates a temporary magical barrier that reduces incoming damage.
+
+It is a defensive spell used to improve survivability in combat.
+
+Shield does not prevent attacks entirely, but it lessens their impact.
+
+Related files: help magearmor, help combat, help spells.

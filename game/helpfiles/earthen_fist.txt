@@ -1,0 +1,12 @@
+Syntax: 
+
+'earthenfist,' 'earthenfist <target>'
+
+------------------------------------
+
+Earthen Fist forms a hardened mass of stone and earth that strikes a target with heavy force.
+
+It is a physical-style magical attack that emphasizes raw impact over precision.
+
+
+Related files: help arcaneblast, help lightningbolt, help spells.

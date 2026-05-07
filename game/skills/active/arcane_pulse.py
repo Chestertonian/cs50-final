@@ -44,7 +44,7 @@ class ArcanePulse(Skill):
 
         for npc in npcs:
             # Pull into combat if not already fighting player.
-            player.combat.start_combat(npc["id"])
+            player.combat.start_combat(npc["id"], player)
 
             damage     = random.randint(2, 5) + int_bonus
             new_health = npc["current_health"] - damage

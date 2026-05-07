@@ -1,0 +1,19 @@
+Syntax: 
+
+'score' shows experience gained.
+
+------------------------------------
+
+Experience points (XP) are awarded for defeating enemies.
+
+Stronger enemies grant more XP. Weaker enemies grant less.
+
+XP is based on the relative difficulty of the enemy compared to your level.
+
+Some NPCs do not grant XP if they are not intended as combat targets.
+
+Group encounters may yield higher XP rewards depending on how many enemies are defeated.
+
+XP is what determines progression toward the next level.
+
+Related files: help leveling, help combat, help npc.

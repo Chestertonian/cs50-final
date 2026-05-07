@@ -1,0 +1,16 @@
+You gain experience points (XP) by defeating enemies
+
+When you gain enough XP, you will level up automatically.
+
+Each level increases your:
+- Maximum Health (HP)
+- Maximum Spell Power (SP)
+- Maximum Movement Points (MP)
+
+You also gain improved combat effectiveness through your skills.
+
+Higher levels require significantly more XP. Progression is fast early on and becomes slower over time.
+
+Leveling is the primary method of character growth in this game.
+
+Related files: help experience, help stats, help combat.

@@ -111,6 +111,7 @@ class Player:
         }
         self.traits = row["traits"]
         self.combat = CombatState()
+        self.invisible_ticks_remaining=0
 
     def refresh(self, db):
         row = db.execute("SELECT * FROM players WHERE id = ?",
@@ -158,7 +159,8 @@ class Player:
                 print("The door is locked.")
                 return False
             print("You unlock the door.")
-        cost = 1  # TODO: replace with room-based cost
+        destination_room = Room.get_by_id(db, row["destination_room_id"])
+        cost = destination_room.movement_cost
 
         if self.movement_points < cost:
             print("You don't have enough movement points.")
@@ -184,17 +186,17 @@ class Player:
             if npc.is_aggro_to_player:
                 if time.time() - npc.aggro_since > AGGRO_TIMER:
                     npc.clear_aggro(db)
-                    
-        for instance in NpcInstance.get_instances_in_room(self.current_room_id, db):
-            if instance.is_aggressive:
-                print(f"{instance.name} attacks you!")
-                self.combat.start_combat(instance.id)
-        for instance in NpcInstance.get_instances_in_room(self.current_room_id, db):
-            if instance.is_aggro_to_player:
-                # A thing happens. Deal damage. attack_roll()
-                print("The monster furiously attacks you as combat is rejoined!")
-                self.combat.start_combat(instance.id)
-
+        
+        if self.invisible_ticks_remaining==0:       
+            for instance in NpcInstance.get_instances_in_room(self.current_room_id, db):
+                if instance.is_aggressive:
+                    print(f"{instance.name} attacks you!")
+                    self.combat.start_combat(instance.id, self)
+            for instance in NpcInstance.get_instances_in_room(self.current_room_id, db):
+                if instance.is_aggro_to_player:
+                    print("The monster furiously attacks you as combat is rejoined!")
+                    self.combat.start_combat(instance.id, self)
+        print("Room:",self.current_room_id)
         return True
 
     def save(self, db):

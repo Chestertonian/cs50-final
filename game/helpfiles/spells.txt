@@ -1,0 +1,17 @@
+Syntax: 
+
+'powername' (e.g. 'magicmissile.') No spaces.
+
+------------------------------------
+
+Spells are special abilities that consume SP (check your SP by typing 'hp.')
+
+Some spells target a single enemy, while others affect multiple targets.
+
+Spells may deal damage, heal, protect, or alter combat conditions.
+
+Spell effectiveness may depend on your attributes such as INT or WIS.
+
+Higher-level spells cost more SP but provide much greater impact.
+
+Related files: help mana, help combat, help regeneration, help SP.

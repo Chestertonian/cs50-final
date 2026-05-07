@@ -1,0 +1,13 @@
+Syntax: 
+
+'flameshield'
+
+------------------------------------
+
+Flame Shield surrounds the caster with burning magical energy.
+
+It reduces incoming damage and may harm enemies that attack.
+
+This spell combines offense and defense but requires significant magical energy.
+
+Related files: help shield, help magearmor, help spells.

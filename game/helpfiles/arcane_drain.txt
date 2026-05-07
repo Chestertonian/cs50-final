@@ -1,0 +1,10 @@
+Syntax: 
+
+'arcanedrain,' 'arcanedrain <target>'
+
+------------------------------------
+
+Arcane Drain siphons magical energy from a target, weakening them while restoring a small amount of the caster’s resources (approximately half of the damage given).
+
+
+Related files: help arcaneweakness, help spells.

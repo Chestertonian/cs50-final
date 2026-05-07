@@ -1,0 +1,17 @@
+Syntax: 
+
+None.
+
+------------------------------------
+
+Your resources naturally regenerate over time.
+
+Health may regenerate through healing abilities, depending on your situation.
+
+SP will regenerate if you wait.
+
+Movement Points (MP) also regenerate over time and are used for...movement.
+
+Regeneration ensures that you can continue adventuring without requiring constant resting, but careful resource management is still extremely important.
+
+Related files: help mana, help leveling, help combat.

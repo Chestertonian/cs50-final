@@ -46,7 +46,7 @@ class GreaterFireball(Skill):
         killed_ids = []
 
         for npc in npcs:
-            player.combat.start_combat(npc["id"])
+            player.combat.start_combat(npc["id"], player)
 
             damage     = random.randint(14, 32) + int_bonus
             new_health = npc["current_health"] - damage

@@ -1,0 +1,13 @@
+Syntax: 
+
+'swiftfeet'
+
+------------------------------------
+
+Swiftfeet enhances movement speed and agility.
+
+It allows quicker travel in the world.
+
+This spell does not affect damage or defense directly but improves mobility.
+
+Related files: help combat, help movement.

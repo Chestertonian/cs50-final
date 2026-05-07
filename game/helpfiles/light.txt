@@ -1,0 +1,15 @@
+Syntax: 
+
+'light'
+
+------------------------------------
+
+Light creates a small, sustained magical glow that surrounds you, illuminating darkness.
+
+This spell has no combat value.
+
+It is often used for exploring caves or other dark environments.
+
+Light persists for a short duration before fading.
+
+Related files: help spells, help senses, help world.

@@ -1,0 +1,11 @@
+Syntax: 
+
+'stoneskin'
+
+------------------------------------
+
+Stoneskin hardens the caster’s or target’s skin into a rock-like barrier.
+
+It provides strong damage reduction for a limited duration.
+
+Related files: help magearmor, help shield, help combat.
