@@ -61,24 +61,7 @@ The game is actively being developed. Here's where things stand now:
 | Wizard guild |  Partially working |
 | Other guilds | Not yet functional |
 
-The **Wizard** is the only semi-functional guild — and even then, a fair number of spells are still buggy. Play at your own risk.
-
----
-
-## Project Structure
-
-```
-├── __main__.py               # Entry point
-├── db/
-│   ├── game.db               # SQLite database
-│   └── schema.sql            # Database schema
-└── game/
-    ├── engine.py             # Main game loop
-    ├── models.py             # Data models
-    ├── combat/               # Combat system
-    ├── commands/             # Player commands
-    └── helpfiles/            # In-game help text
-```
+The **Wizard** is the only semi-functional guild — and even then, a fair number of spells are still buggy or nonfunctional. Play at your own risk.
 
 ---
 
