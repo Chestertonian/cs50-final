@@ -3,9 +3,6 @@
 game/skills/registry.py
  
 Loads all skills from the DB at startup and stores them in two dicts:
- 
-  ACTIVE_SKILLS  = { 'magic_missile': <MagicMissile obj>, ... }
-  PASSIVE_SKILLS = { 'each_round': [<obj>, ...], 'on_hit': [...] }
 """
 
 from game.skills.active.magic_missile import MagicMissile
@@ -89,7 +86,6 @@ def load_skills(db):
  
         if name not in SKILL_CLASS_MAP:
             # Skill exists in DB but has no implementation yet — skip silently.
-            # This lets you seed future skills in the DB without crashing.
             print(f"[skills] Warning: '{name}' is in DB but has no class in SKILL_CLASS_MAP.")
             continue
  

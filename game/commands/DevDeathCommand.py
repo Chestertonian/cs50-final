@@ -1,5 +1,5 @@
 # game/commands/DevDeathCommands
-# Not for use by players; to be removed.
+# Not for use by players.
 
 from game.commands.base import Command
 from game.combat.combat_loop import handle_death

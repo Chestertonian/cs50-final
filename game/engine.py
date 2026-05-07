@@ -54,15 +54,15 @@ class GameEngine:
             "equip": EquipCommand(),
             "remove": RemoveCommand(),
             "hp": HpCommand(),
-            "add_movement": AddMovementPointsCommand(),
-            "add_sp": AddSPCommand(),
+            #"add_movement": AddMovementPointsCommand(),
+            #"add_sp": AddSPCommand(),
             "ask": AskCommand(),
             "wealth": WealthCommand(),
             "kill": KillCommand(),
-            "clear_combat": DevClearCombatCommand(),
+            #"clear_combat": DevClearCombatCommand(),
             "flee": FleeCommand(),
             "die": DeathCommand(),
-            "add_health": AddHealthPointsCommand(),
+            #"add_health": AddHealthPointsCommand(),
             "powers": PowersCommand(),
         }
         self.aliases = {
@@ -88,7 +88,6 @@ class GameEngine:
         # Load skills from DB into the registry.
         load_skills(db)
         self.active_skills = ACTIVE_SKILLS
-        print("Loaded skills:", list(self.active_skills.keys()))
 
 
     def run(self):

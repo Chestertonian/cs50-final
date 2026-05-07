@@ -1,4 +1,5 @@
 # game/commands/wealth.py
+# For when wealth is an actual thing.
 
 from game.commands.base import Command
 from game.wealth import get_wealth

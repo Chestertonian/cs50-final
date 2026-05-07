@@ -1,3 +1,5 @@
+# game/commands/inventory.py
+
 from game.commands.base import Command
 from game.models import Item
 

@@ -1,3 +1,5 @@
+# game/tick.py
+
 import time
 from game.spawner import run_spawns
 

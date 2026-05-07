@@ -1,5 +1,6 @@
-# models.py, home to the loading, representation, and saving of various game entities. The purpose of this is to avoid constant raw SQL queries in the code later.
-# pyright: ignore[reportMissingImports]
+# game/models.py, 
+# home to the loading, representation, and saving of various game entities. The purpose of this is to avoid constant raw SQL queries in the code later.
+
 from game.helpers import wrap_text, AGGRO_TIMER
 from game.combat.combat_state import CombatState
 import time

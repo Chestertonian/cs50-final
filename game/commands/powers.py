@@ -1,6 +1,5 @@
+# game/commands/powers.py
 """
-game/commands/powers.py
-
 Shows the player all skills/spells available to their guild,
 grouped by level, with an indicator if they can use it yet.
 """
@@ -12,7 +11,7 @@ from game.skills.registry import get_player_skills, ACTIVE_SKILLS, PASSIVE_SKILL
 class PowersCommand(Command):
     def execute(self, player, db, args):
         # Gather all skills for this guild from the DB directly,
-        # so we can show locked ones too (not just what they qualify for).
+        # so can show locked ones too .
         rows = db.execute(
             "SELECT * FROM skills WHERE guild = ? ORDER BY min_level, name",
             (player.guild,)

@@ -1,4 +1,5 @@
 # game/wealth.py
+
 import random
 from game.helpers import get_db
 

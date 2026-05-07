@@ -1,4 +1,5 @@
 # game/commands/say.py
+# Doesn't even broadcast to room right now. "Vanity" command.
 
 from game.commands.base import Command
 

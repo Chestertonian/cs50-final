@@ -13,7 +13,7 @@ from game.models import NpcInstance
 
 BARE_HANDS_MIN = 1
 BARE_HANDS_MAX = 3
-PLAYER_BASE_DEFENSE = 0  # placeholder until armor is fully integrated
+PLAYER_BASE_DEFENSE = 0
 
 def get_player_defense(player, db):
     """Sum defense from all equipped armor pieces."""

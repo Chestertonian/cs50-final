@@ -1,4 +1,5 @@
 # game/commands/score.py
+# Display player info.
 
 from game.commands.base import Command
 

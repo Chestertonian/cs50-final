@@ -1,3 +1,5 @@
+# game/commands/kill.py
+
 from game.commands.base import Command
 from game.models import NpcInstance, find_item_by_name
 from game.helpers import parse_target_and_index

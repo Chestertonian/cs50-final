@@ -1,5 +1,6 @@
+# game/skills/base.py
+
 """
-game/skills/base.py
  
 Defines the base class for all Skills.
  

@@ -1,260 +1,354 @@
--- =============================================================================
--- schema.sql
--- Database schema for cs50 Final Project
--- =============================================================================
-
-
--- =============================================================================
--- WORLD
--- =============================================================================
+-- ============================================================
+-- WORLD CORE
+-- ============================================================
 
 CREATE TABLE rooms (
-    id           INTEGER PRIMARY KEY AUTOINCREMENT,
-    name         TEXT    NOT NULL,
-    description  TEXT    NOT NULL,
-    lighting     INTEGER NOT NULL DEFAULT 1,
-    smell        TEXT    NOT NULL DEFAULT '',
-    sound        TEXT    NOT NULL DEFAULT '',
-    area         TEXT    NOT NULL DEFAULT 'city', -- used for grouping/theming
-    movement_cost INTEGER DEFAULT 3,
-    created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+
+    -- Environmental attributes
+    lighting INTEGER NOT NULL DEFAULT 1,
+    smell TEXT NOT NULL DEFAULT '',
+    sound TEXT NOT NULL DEFAULT '',
+    area TEXT NOT NULL DEFAULT 'city',
+
+    -- Movement cost for entering this room
+    movement_cost INTEGER DEFAULT 2,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- All connections between rooms
 CREATE TABLE exits (
-    id                   INTEGER PRIMARY KEY AUTOINCREMENT,
-    room_id              INTEGER NOT NULL,
-    direction            TEXT    NOT NULL,        -- 'north', 'east', 'up', etc.
-    destination_room_id  INTEGER NOT NULL,
-    secret               INTEGER NOT NULL DEFAULT 0,  -- 1 = hidden from exit list
-    locked               INTEGER NOT NULL DEFAULT 0,  -- 1 = requires a key
-    key_template_id      INTEGER DEFAULT NULL,         -- item_template needed to unlock (e.g. key)
-    created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (room_id)             REFERENCES rooms(id),
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    room_id INTEGER NOT NULL,
+    direction TEXT NOT NULL, -- aka exit name
+    destination_room_id INTEGER NOT NULL,
+
+    secret INTEGER NOT NULL DEFAULT 0,
+    locked INTEGER NOT NULL DEFAULT 0,
+    key_template_id INTEGER DEFAULT NULL, -- what unlocks this door, if it's locked?
+    description TEXT DEFAULT '',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (room_id) REFERENCES rooms(id),
     FOREIGN KEY (destination_room_id) REFERENCES rooms(id),
-    UNIQUE(room_id, direction)        -- one exit per direction per room
+
+    UNIQUE(room_id, direction)
 );
 
+-- ============================================================
+-- ITEM SYSTEM (TEMPLATES = archetypes)
+-- ============================================================
 
--- =============================================================================
--- ITEMS — Templates (blueprints) and Instances (physical copies in the world)
--- =============================================================================
-
--- Shared data for all items of a given type.
 CREATE TABLE item_templates (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    name        TEXT    NOT NULL,
-    description TEXT    NOT NULL,
-    item_type   TEXT    NOT NULL,           -- 'weapon','armor','torch','food','treasure','container'
-    weight      INTEGER NOT NULL DEFAULT 1,
-    value       INTEGER NOT NULL DEFAULT 0, -- gold value
-    is_takeable INTEGER NOT NULL DEFAULT 1, -- 0 = fixed to the world
-    is_droppable INTEGER NOT NULL DEFAULT 1, -- 0 = not used yet, maybe necessary someday.
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+
+    item_type TEXT NOT NULL,  -- weapon, armor, torch, food, treasure, container
+
+    weight INTEGER NOT NULL DEFAULT 1,
+    value INTEGER NOT NULL DEFAULT 0,
+
+    is_takeable INTEGER NOT NULL DEFAULT 1, 
+    is_droppable INTEGER NOT NULL DEFAULT 1,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Extra data for weapons.
+-- Weapon-specific data
 CREATE TABLE item_weapon_templates (
-    template_id  INTEGER PRIMARY KEY,
-    damage_min   INTEGER NOT NULL DEFAULT 1,
-    damage_max   INTEGER NOT NULL DEFAULT 4,
-    weapon_type  TEXT    NOT NULL DEFAULT 'melee',
+    template_id INTEGER PRIMARY KEY,
+    damage_min INTEGER NOT NULL DEFAULT 1,
+    damage_max INTEGER NOT NULL DEFAULT 4,
+    weapon_type TEXT NOT NULL DEFAULT 'melee',
+
     FOREIGN KEY (template_id) REFERENCES item_templates(id)
 );
 
--- Extra data for armor pieces.
+-- Armor-specific data
 CREATE TABLE item_armor_templates (
-    template_id      INTEGER PRIMARY KEY,
-    defense          INTEGER NOT NULL DEFAULT 1,
-    damage_reduction REAL    NOT NULL DEFAULT 0.05, -- fraction of damage blocked (0.0–1.0)
-    armor_slot       TEXT    NOT NULL,              -- 'head', 'body', 'hands', 'feet'
+    template_id INTEGER PRIMARY KEY,
+    defense INTEGER NOT NULL DEFAULT 1,
+    armor_slot TEXT NOT NULL, -- e.g. 'body' or 'head'
+    damage_reduction REAL NOT NULL DEFAULT 0.05,
+
     FOREIGN KEY (template_id) REFERENCES item_templates(id)
 );
 
--- Extra data for torches.
+-- Torch-specific data
 CREATE TABLE item_torch_templates (
-    template_id       INTEGER PRIMARY KEY,
-    default_burn_time INTEGER NOT NULL DEFAULT 100, -- ticks before burning out
+    template_id INTEGER PRIMARY KEY,
+    default_burn_time INTEGER NOT NULL DEFAULT 100,
+
     FOREIGN KEY (template_id) REFERENCES item_templates(id)
 );
 
--- Extra data for food. (TODO: flesh out)
+-- Future systems
 CREATE TABLE item_food_templates (
-    template_id  INTEGER PRIMARY KEY,
-    heal_amount  INTEGER NOT NULL DEFAULT 5,
+    template_id INTEGER PRIMARY KEY,
+    heal_amount INTEGER NOT NULL DEFAULT 5,
+
     FOREIGN KEY (template_id) REFERENCES item_templates(id)
 );
 
--- Extra data for containers. (TODO: not yet used)
 CREATE TABLE item_container_templates (
     template_id INTEGER PRIMARY KEY,
-    capacity    INTEGER NOT NULL DEFAULT 5, -- max items it can hold
+    capacity INTEGER NOT NULL DEFAULT 5,
+
     FOREIGN KEY (template_id) REFERENCES item_templates(id)
 );
 
--- A physical copy of an item that exists somewhere in the world.
+-- ============================================================
+-- ITEM INSTANCES
+-- ============================================================
+
 CREATE TABLE item_instances (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     template_id INTEGER NOT NULL,
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
     FOREIGN KEY (template_id) REFERENCES item_templates(id)
 );
 
--- Per-instance state for torches (burn time ticks down, can be lit/doused).
+-- Torch runtime state (not yet used)
 CREATE TABLE item_torch_instances (
     instance_id INTEGER PRIMARY KEY,
-    burn_time   INTEGER NOT NULL DEFAULT 100,
-    is_lit      INTEGER NOT NULL DEFAULT 0,  -- 0 = unlit, 1 = lit
+    burn_time INTEGER NOT NULL DEFAULT 100,
+    is_lit INTEGER NOT NULL DEFAULT 0,
+
     FOREIGN KEY (instance_id) REFERENCES item_instances(id)
 );
 
--- Tracks where every item instance currently is.
--- Exactly one of room_id / player_id / npc_id must be set (enforced by CHECK).
--- equipped_slot is only non-null when the item is worn/wielded by a player.
+-- Where items currently exist (VERY important!)
 CREATE TABLE item_locations (
-    id           INTEGER PRIMARY KEY AUTOINCREMENT,
-    instance_id  INTEGER NOT NULL UNIQUE,
-    room_id      INTEGER DEFAULT NULL,
-    player_id    INTEGER DEFAULT NULL,
-    npc_id       INTEGER DEFAULT NULL,
-    equipped_slot TEXT   DEFAULT NULL,  -- 'head','body','hands','feet','weapon'
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    instance_id INTEGER NOT NULL UNIQUE,
+
+    room_id INTEGER,
+    player_id INTEGER,
+    npc_id INTEGER,
+
+    equipped_slot TEXT DEFAULT NULL,
+
     FOREIGN KEY (instance_id) REFERENCES item_instances(id),
-    FOREIGN KEY (room_id)     REFERENCES rooms(id),
-    FOREIGN KEY (player_id)   REFERENCES players(id),
-    FOREIGN KEY (npc_id)      REFERENCES npc_instances(id),
+    FOREIGN KEY (room_id) REFERENCES rooms(id),
+    FOREIGN KEY (player_id) REFERENCES players(id),
+    FOREIGN KEY (npc_id) REFERENCES npc_instances(id),
+
+    -- ensures item exists in exactly ONE place
     CHECK (
         (room_id IS NOT NULL AND player_id IS NULL AND npc_id IS NULL) OR
-        (player_id IS NOT NULL AND room_id IS NULL AND npc_id IS NULL) OR
-        (npc_id IS NOT NULL AND room_id IS NULL AND player_id IS NULL)
+        (room_id IS NULL AND player_id IS NOT NULL AND npc_id IS NULL) OR
+        (room_id IS NULL AND player_id IS NULL AND npc_id IS NOT NULL)
     )
 );
 
--- Controls where and how often items respawn in the world.
-CREATE TABLE item_spawns (
-    id           INTEGER PRIMARY KEY AUTOINCREMENT,
-    template_id  INTEGER NOT NULL,
-    room_id      INTEGER NOT NULL,
-    max_count    INTEGER NOT NULL DEFAULT 1,
-    respawn_time INTEGER NOT NULL DEFAULT 300, -- seconds between respawns
-    last_spawn_at REAL   DEFAULT 0,
-    FOREIGN KEY (template_id) REFERENCES item_templates(id),
-    FOREIGN KEY (room_id)     REFERENCES rooms(id)
+-- ============================================================
+-- PLAYER SYSTEM
+-- ============================================================
+
+CREATE TABLE players (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL, -- hashed password ONLY
+
+    race TEXT NOT NULL DEFAULT 'human',
+    guild TEXT NOT NULL DEFAULT 'wizard',
+    gender INTEGER NOT NULL,
+
+    save_name TEXT UNIQUE,
+
+    current_room_id INTEGER NOT NULL DEFAULT 1,
+
+    health INTEGER NOT NULL DEFAULT 25,
+    max_health INTEGER NOT NULL DEFAULT 25,
+
+    experience INTEGER NOT NULL DEFAULT 0,
+    level INTEGER NOT NULL DEFAULT 1,
+
+    -- stats
+    int_stat INTEGER NOT NULL,
+    wis_stat INTEGER NOT NULL,
+    dex_stat INTEGER NOT NULL,
+    cha_stat INTEGER NOT NULL,
+    con_stat INTEGER NOT NULL,
+    str_stat INTEGER NOT NULL,
+
+    traits TEXT NOT NULL DEFAULT '', -- not yet used
+
+    movement_points INTEGER DEFAULT 25,
+    max_movement_points INTEGER DEFAULT 25,
+
+    power INTEGER DEFAULT 25,
+    max_power INTEGER DEFAULT 25,
+
+    wealth INTEGER DEFAULT 25,
+
+    last_tick_at REAL NOT NULL DEFAULT 0, -- when did they last regenerate, etc
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (current_room_id) REFERENCES rooms(id)
 );
 
+-- ============================================================
+-- NPC SYSTEM
+-- ============================================================
 
--- =============================================================================
--- NPCs — Templates (blueprints) and Instances (living copies in the world)
--- =============================================================================
-
--- Shared data for all NPCs of a given type.
+-- NPC archetypes (Platonic forms if you've taken HUM 201)
 CREATE TABLE npc_templates (
-    id               INTEGER PRIMARY KEY AUTOINCREMENT,
-    name             TEXT    NOT NULL,
-    description      TEXT    NOT NULL,
-    gender           INTEGER DEFAULT 0,          -- 0 = neutral, 1 = male, 2 = female
-    max_health       INTEGER NOT NULL DEFAULT 25,
-    is_aggressive    INTEGER NOT NULL DEFAULT 0, -- 1 = attacks player on sight
-    damage_min       INTEGER NOT NULL DEFAULT 1,
-    damage_max       INTEGER NOT NULL DEFAULT 4,
-    damage_reduction REAL    NOT NULL DEFAULT 0.0, -- fraction of incoming damage blocked
-    created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+
+    max_health INTEGER NOT NULL DEFAULT 25,
+    is_aggressive INTEGER NOT NULL DEFAULT 0,
+
+    gender INTEGER DEFAULT 0, -- 1=male, 2=female.
+
+    damage_min INTEGER NOT NULL DEFAULT 1,
+    damage_max INTEGER NOT NULL DEFAULT 4,
+    damage_reduction REAL NOT NULL DEFAULT 0.0,
+
+    wealth_min INTEGER DEFAULT 0,
+    wealth_max INTEGER DEFAULT 5,
+
+    xp INTEGER NOT NULL DEFAULT 0,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- A living copy of an NPC template, placed in a specific room.
+-- NPC instances in the world (an actual goblin running around in the world!)
 CREATE TABLE npc_instances (
-    id               INTEGER PRIMARY KEY AUTOINCREMENT,
-    template_id      INTEGER NOT NULL,
-    room_id          INTEGER NOT NULL,
-    home_room_id     INTEGER DEFAULT NULL,       -- room to return to if wandering
-    current_health   INTEGER NOT NULL,
-    is_alive         INTEGER NOT NULL DEFAULT 1, -- 0 = dead
-    last_action_tick INTEGER DEFAULT 0,          -- used for tick pacing
-    created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    template_id INTEGER NOT NULL,
+    room_id INTEGER NOT NULL,
+
+    current_health INTEGER NOT NULL,
+    is_alive INTEGER NOT NULL DEFAULT 1,
+
+    last_action_tick INTEGER DEFAULT 0,
+    home_room_id INTEGER,
+
+    is_aggro_to_player INTEGER NOT NULL DEFAULT 0,
+    aggro_since REAL DEFAULT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
     FOREIGN KEY (template_id) REFERENCES npc_templates(id),
-    FOREIGN KEY (room_id)     REFERENCES rooms(id)
+    FOREIGN KEY (room_id) REFERENCES rooms(id)
 );
 
--- Controls where and how often NPCs respawn in the world.
+-- Respawn rules (where to put templates)
 CREATE TABLE npc_spawns (
-    id             INTEGER PRIMARY KEY AUTOINCREMENT,
-    template_id    INTEGER NOT NULL,
-    room_id        INTEGER NOT NULL,
-    max_count      INTEGER NOT NULL DEFAULT 1,
-    respawn_delay  INTEGER NOT NULL DEFAULT 300, -- seconds between respawns by default
-    last_spawn_at  REAL    DEFAULT 0,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    template_id INTEGER NOT NULL,
+    room_id INTEGER NOT NULL,
+
+    max_count INTEGER NOT NULL DEFAULT 1, -- How many can show up
+    respawn_delay INTEGER NOT NULL DEFAULT 300, -- in seconds
+    last_spawn_at REAL DEFAULT 0,
+
     FOREIGN KEY (template_id) REFERENCES npc_templates(id),
-    FOREIGN KEY (room_id)     REFERENCES rooms(id)
+    FOREIGN KEY (room_id) REFERENCES rooms(id)
 );
 
-
--- =============================================================================
--- DIALOGUE
--- =============================================================================
-
--- Simple dialogue table.
+-- Simple dialogue system (e.g. "ask guard about name")
 CREATE TABLE dialogue (
-    id      INTEGER PRIMARY KEY,
-    npc_id  INTEGER,  -- references npc_templates.id
-    topic   TEXT,
+    id INTEGER PRIMARY KEY,
+    npc_id INTEGER,
+    topic TEXT,
     response TEXT
 );
 
-
--- =============================================================================
--- COMBAT — NPC special attacks
--- =============================================================================
-
--- Optional special attacks that an NPC type can use in combat.
-CREATE TABLE npc_special_attacks (
-    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+-- Keyword-based dialogue system. This is a fancier version of what I'm currently doing, for version 2.0 of my game.
+CREATE TABLE npc_dialogue_keywords (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     npc_template_id INTEGER NOT NULL,
-    attack_name     TEXT    NOT NULL,         -- e.g. 'poison_bite', 'knockdown'
-    chance          REAL    NOT NULL DEFAULT 0.2, -- probability per round (0.0–1.0)
-    damage_min      INTEGER DEFAULT 0,
-    damage_max      INTEGER DEFAULT 0,
-    effect          TEXT    DEFAULT NULL,     -- e.g. 'poison', 'knockdown', 'flee'
-    message         TEXT    NOT NULL,         -- shown to player when triggered
+
+    keyword TEXT NOT NULL,
+    response TEXT NOT NULL,
+
+    required_state TEXT DEFAULT 'default',
+    required_flag TEXT DEFAULT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
     FOREIGN KEY (npc_template_id) REFERENCES npc_templates(id)
 );
 
+-- Special attacks per NPC type, not used yet.
+CREATE TABLE npc_special_attacks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    npc_template_id INTEGER NOT NULL,
 
--- =============================================================================
--- PLAYERS
--- =============================================================================
+    attack_name TEXT NOT NULL,
+    chance REAL NOT NULL DEFAULT 0.2,
 
-CREATE TABLE players (
-    id                   INTEGER PRIMARY KEY AUTOINCREMENT,
-    name                 TEXT    NOT NULL UNIQUE,
-    password             TEXT    NOT NULL,
-    race                 TEXT    NOT NULL DEFAULT 'human',
-    guild                TEXT    NOT NULL DEFAULT 'warrior',
-    gender               INTEGER NOT NULL,          -- 0 = neutral, 1 = male, 2 = female
-    save_name            TEXT    UNIQUE,
-    current_room_id      INTEGER NOT NULL DEFAULT 1,
+    damage_min INTEGER DEFAULT 0,
+    damage_max INTEGER DEFAULT 0,
 
-    -- Resources
-    health               INTEGER NOT NULL DEFAULT 25,
-    max_health           INTEGER NOT NULL DEFAULT 25,
-    power                INTEGER DEFAULT 25,        -- mana / spell points
-    max_power            INTEGER DEFAULT 25,
-    movement_points      INTEGER DEFAULT 25,
-    max_movement_points  INTEGER DEFAULT 25,
+    effect TEXT DEFAULT NULL,
+    message TEXT NOT NULL,
 
-    -- Progression
-    experience           INTEGER NOT NULL DEFAULT 0,
-    level                INTEGER NOT NULL DEFAULT 1,
+    FOREIGN KEY (npc_template_id) REFERENCES npc_templates(id)
+);
 
-    -- Stats
-    str_stat             INTEGER NOT NULL,
-    con_stat             INTEGER NOT NULL,
-    dex_stat             INTEGER NOT NULL,
-    int_stat             INTEGER NOT NULL,
-    wis_stat             INTEGER NOT NULL,
-    cha_stat             INTEGER NOT NULL,
+-- ============================================================
+-- SHOPS (not yet implemented)
+-- ============================================================
 
-    traits               TEXT    NOT NULL DEFAULT '',
-    last_tick_at         REAL    NOT NULL DEFAULT 0,
-    created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+CREATE TABLE shop_inventory (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    npc_template_id INTEGER NOT NULL,
+    item_template_id INTEGER NOT NULL,
 
-    FOREIGN KEY (current_room_id) REFERENCES rooms(id)
+    price INTEGER NOT NULL,
+
+    FOREIGN KEY (npc_template_id) REFERENCES npc_templates(id),
+    FOREIGN KEY (item_template_id) REFERENCES item_templates(id)
+);
+
+-- ============================================================
+-- WORLD SPAWNS (for items)
+-- ============================================================
+
+CREATE TABLE item_spawns (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    template_id INTEGER NOT NULL,
+    room_id INTEGER NOT NULL,
+
+    max_count INTEGER NOT NULL DEFAULT 1,
+    respawn_time INTEGER NOT NULL DEFAULT 300,
+
+    last_spawn_at REAL DEFAULT 0,
+
+    FOREIGN KEY (template_id) REFERENCES item_templates(id),
+    FOREIGN KEY (room_id) REFERENCES rooms(id)
+);
+
+-- ============================================================
+-- SKILL SYSTEM (all powers go here)
+-- ============================================================
+
+CREATE TABLE skills (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    display_name TEXT NOT NULL,
+    description TEXT NOT NULL,
+
+    guild TEXT NOT NULL,
+
+    min_level INTEGER NOT NULL DEFAULT 1,
+    power_cost INTEGER NOT NULL DEFAULT 0,
+
+    skill_type TEXT NOT NULL DEFAULT 'active',
+    trigger TEXT DEFAULT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
