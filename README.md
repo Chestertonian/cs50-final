@@ -1,6 +1,8 @@
 # Wayfarer 0.1
 
-> *It's called Wayfarer because it doesn't feature very much wayfaring.*
+![Mountains image](creative-information/mountains.jpg)
+
+> *It's called Wayfarer because it doesn't feature very much wayfaring -- yet.*
 
 Wayfarer is a single-player, text-based adventure game set in the land of Kaelos — a fantasy world with a very small town to explore, monsters lurking in caves, and a combat system that will definitely kill you.
 
