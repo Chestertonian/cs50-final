@@ -51,14 +51,38 @@ Explain any non-trivial logic.
 - Procedural generation (if applicable)
 
 ## File Structure
-Brief explanation of important files.
+Yes, this is an absolutely massive folder.
+Creative-information should basically be ignored. Nothing cs50 relevant here.
+db has the actual game database and the schema.
+Everything interesting is under game.
+character_creation, login, and stats are all among the first things I wrote. They're for the initial screen of the game and creating a character.
+Engine is key -- it includes the parser and game engine.
+Wealth is a bunch of unrelated helpers that aren't really being used now, and are for future incorporation.
+Spawner is responsible for spawning NPCs and items from SQL tables.
+Models: a beast of a file! (το θηριον.) It has almost all of the "db.execute" in the project. It's where *most* interaction with the SQL occurs, and where the models are all created for things like items, NPCs, rooms, and players, each with a whole host of methods accompanying it. Worth noting that there are also things in there which aren't being used currently.
+Helpers: Many things that I did not put elsewhere. Some of them should likely be elsewhere.
+**/combat**
+Has combat_loop, which handles most of the combat things.
+Combat_state, which is responsible for starting and ending combat (all stored in memory, not to the database.)
+**/commands**
+All of the commands are here. There are... a lot, so I won't go over all of them.
+**All of the Dev commands are, by default, commented out in engine.py, so that they can't be used. They're for testing purposes (I left them in there for graders' purposes, since they might be useful.**
+**/helpfiles**
+Literally just a ton of .txt files. Boring.
+**/skills**
+The base skill class.
+Registry of all skills (if a skill isn't in there, it isn't being used).
+**/active**
+Why active? I anticipate there being passive skills at some point (e.g. "Enduring: You regenerate movement slightly faster.")
+This contains all of the wizard powers, as well as a power for each other class excepting the cleric. If you want to test this game, play a wizard.
+**/text_files**
+What it says. Various textfiles that aren't helpfiles.
 
-- `models.py` – core game logic
-- `engine.py` – command processing
-- etc.
 
 ## Challenges
-What was difficult and how you solved it.
+Probably *the* biggest challenge that I encountered was the instance-template problem. I couldn't figure out how to make all of those systems work until I had my eureka moment.
+
+The other one surrounds combat: I would've loved to have it be real-time (every 3 seconds or so, weapon attacks occur.) Unfortunately, that wasn't doable without threading. If I had been aware of this earlier, I would probably have tried to add some level of threading from the beginning -- once I figured out that I'd have to do that, it was too late to go back and add something of that magnitude.
 
 ## Future Improvements
 I definitely want to work on this more, and make it a more enjoyable game.
@@ -68,6 +92,9 @@ I definitely want to work on this more, and make it a more enjoyable game.
 - Working food, lighting system.
 - Working economic system.
 - More areas. (There's actually about 30 unreachable rooms in the game now that I just didn't have time to add exits for :( )
+- Better weapons.
+- Quests.
+- Multiplayer. (This would be a vastly enjoyable challenge!)
 
 
 ## Outcomes Reached
