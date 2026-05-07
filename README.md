@@ -1,9 +1,87 @@
-# cs50-final (Wayfarer)
+# Wayfarer 1.0
 
-Wayfarer is a text-based fantasy adventure game set in the land of Kaelos. It's called _Wayfarer_ because I can't think of a better name right now.
+> *It's called Wayfarer because it doesn't feature very much wayfaring.*
 
-Currently, it has character creation, login, a bit of world to explore, senses, and items, NPCs, and basic combat. When you create a character, it leads to a town; the world has about two hundred rooms you can walk around in. And somewhere, there's a cave full of monsters.
+Wayfarer is a single-player, text-based adventure game set in the land of Kaelos — a fantasy world with a very small town to explore, monsters lurking in caves, and a combat system that will definitely kill you.
 
-Character classes and skills coming soon! (With a host of other new things, I hope.)
+Built as a CS50 final project in Python with SQLite3.
 
-To run this, download the repository and open a terminal. Then, navigate to the folder; next, type 'python .' in the terminal. You should see the game welcome screen -- from there, I hope it's fairly intuitive. Type 'help' if you can't figure out the way the game works.
+---
+
+## Features
+
+- Character creation with race and guild selection
+- A world with just under 200 rooms to explore
+- Environmental senses — look, listen, smell
+- Items, equipment, and inventory management
+- NPC encounters and dialogue
+- Turn-based combat
+- Leveling and experience
+- A cave. Full of monsters.
+
+---
+
+## Getting Started
+
+**Requirements:** Python 3 installed on your computer.
+
+```
+# 1. Clone or download the repository
+# 2. Open a terminal and navigate to the project folder
+cd path/to/wayfarer
+
+# 3. Run the game
+python .
+```
+
+You'll land on the welcome screen. From there, create a character and get dropped into town. Type `help` at any time if you're lost.
+
+Try exploring a bit (e.g. "east). Try to find the secret chamber in the house, and steal some armor there. Then, go to the East Forest...east of town. Once you're there, find a deer and try to kill it. Use your 'powers' (like 'magicmissile.')
+
+Also, read the helpfiles! Seriously.
+
+---
+
+## Current State
+
+**Work in progress.**
+
+The game is actively being developed. Here's where things stand now:
+
+| Feature | Status |
+|---|---|
+| Character creation | Working |
+| World exploration (~200 rooms) | Working |
+| Combat | Working |
+| Items & equipment | Working |
+| NPCs & dialogue | Working |
+| Leveling | Working |
+| Skills | In progress, mostly there. |
+| Shops | Not yet functional |
+| Wizard guild |  Partially working |
+| Other guilds | Not yet functional |
+
+The **Wizard** is the only semi-functional guild — and even then, a fair number of spells are still buggy. Play at your own risk.
+
+---
+
+## Project Structure
+
+```
+├── __main__.py               # Entry point
+├── db/
+│   ├── game.db               # SQLite database
+│   └── schema.sql            # Database schema
+└── game/
+    ├── engine.py             # Main game loop
+    ├── models.py             # Data models
+    ├── combat/               # Combat system
+    ├── commands/             # Player commands
+    └── helpfiles/            # In-game help text
+```
+
+---
+
+## License
+
+See [LICENSE](LICENSE).
