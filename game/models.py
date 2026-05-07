@@ -640,7 +640,8 @@ class NpcTemplate:
         self.damage_max=row["damage_max"]
         self.is_aggressive = bool(row["is_aggressive"])
         self.xp=row["xp"]
-
+        self.damage_reduction=row["damage_reduction"]
+        
     @staticmethod
     def get_by_id(db, template_id):
         row = db.execute(

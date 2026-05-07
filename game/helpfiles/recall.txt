@@ -1,0 +1,12 @@
+Syntax: 
+
+'recall'
+
+------------------------------------
+
+Recall allows the caster to instantly withdraw from combat or dangerous situations and return to a safe location.
+
+This ability is not a traditional attack spell and does not deal damage. It is intended as an emergency escape tool when survival is uncertain.
+
+
+Related files: help spells, help combat, help movement.

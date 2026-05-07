@@ -9,7 +9,14 @@ class DropCommand(Command):
     def execute(self, player, db, args):
         if not args:
             return "Drop what?"
-
+        if args==["all"]:
+            for item in (Item.get_items_for_player(player.id, db)):
+                if not item.is_droppable:
+                    return f"You can't drop the {item.name.lower()}."
+                room = player.get_current_room(db)
+                item.move_to_room(room.id)
+                print(f"You drop the {item.name.lower()}.")
+            return
         item_name = " ".join(args)  # handles multi-word names
 
         player_items = Item.get_items_for_player(player.id, db)

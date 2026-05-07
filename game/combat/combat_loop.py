@@ -13,7 +13,21 @@ from game.models import NpcInstance
 
 BARE_HANDS_MIN = 1
 BARE_HANDS_MAX = 3
+PLAYER_BASE_DEFENSE = 0  # placeholder until armor is fully integrated
 
+def get_player_defense(player, db):
+    """Sum defense from all equipped armor pieces."""
+    rows = db.execute("""
+        SELECT iat.defense
+        FROM item_locations il
+        JOIN item_instances ii ON il.instance_id = ii.id
+        JOIN item_templates it ON ii.template_id = it.id
+        JOIN item_armor_templates iat ON it.id = iat.template_id
+        WHERE il.player_id = ? AND il.equipped_slot IS NOT NULL
+    """, (player.id,)).fetchall()
+
+    equipped_defense = sum(row["defense"] for row in rows)
+    return PLAYER_BASE_DEFENSE + equipped_defense
 
 def check_level_up(player, db):
     """Check if the player has enough XP to level up (possibly multiple times)."""
@@ -99,9 +113,15 @@ def run_combat_round(player, db):
     weapon = player.get_equipped_weapon(db)
     if weapon:
         damage = random.randint(weapon["damage_min"], weapon["damage_max"])
-        print(f"You hit {npc.name} with your {weapon['name']} for {damage} damage.")
     else:
         damage = random.randint(BARE_HANDS_MIN, BARE_HANDS_MAX)
+
+    # Apply NPC's natural damage reduction (e.g. 0.1 = blocks 10% of damage)
+    damage = max(1, int(damage * (1 - npc.template.damage_reduction)))
+
+    if weapon:
+        print(f"You hit {npc.name} with your {weapon['name']} for {damage} damage.")
+    else:
         print(f"You hit {npc.name} with your bare hands for {damage} damage.")
 
     npc.current_health -= damage
@@ -118,12 +138,18 @@ def run_combat_round(player, db):
     # ─────────────────────────────
     # EACH ATTACKER HITS PLAYER
     # ─────────────────────────────
+    defense = get_player_defense(player, db)
     for npc_id in list(player.combat.attacker_ids):
         attacker = NpcInstance.get_by_id(db, npc_id)
         if not attacker or not attacker.is_alive:
             continue
-        damage = random.randint(attacker.damage_min, attacker.damage_max)
-        print(f"{attacker.name} hits you for {damage} damage.")
+        raw_damage = random.randint(attacker.damage_min, attacker.damage_max)
+        max_absorb = int(raw_damage * 0.5)
+        damage = max(2, raw_damage - min(defense, max_absorb))
+        if defense > 0 and raw_damage > damage:
+            print(f"{attacker.name} hits you for {damage} damage. ({raw_damage} - {defense} absorbed)")
+        else:
+            print(f"{attacker.name} hits you for {damage} damage.")
         player.health -= damage
 
     if player.health <= 0:

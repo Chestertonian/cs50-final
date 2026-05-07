@@ -2,7 +2,7 @@
 
 from game.commands.base import Command  # pyright: ignore[reportMissingImports]
 from game.models import Item, NpcInstance, find_item_by_name
-from game.helpers import wrap_text, parse_target_and_index
+from game.helpers import wrap_text, parse_target_and_index, get_health_condition
 
 
 class LookCommand(Command):
@@ -30,7 +30,8 @@ class LookCommand(Command):
             return f"Which one do you mean? {names}."
 
         if npc_match:
-            return wrap_text(f"\n{npc_match.description}\n")
+            condition = get_health_condition(npc_match.current_health, npc_match.max_health)
+            return wrap_text(f"\n{npc_match.description}\n\n{npc_match.name} {condition}.\n")
 
         # ─────────────────────────────
         # ROOM ITEMS

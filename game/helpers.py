@@ -104,3 +104,22 @@ def get_npc_name(target, db):
         (target["id"],)
     ).fetchone()
     return row["name"] if row else "your target"
+
+
+def get_health_condition(current: int, maximum: int) -> str:
+    """Returns a readable health condition string for an NPC."""
+    if maximum <= 0:
+        return "is in an unknown state"
+    
+    percent = current / maximum
+
+    if percent >= 1.0:
+        return "is in perfect condition"
+    elif percent >= 0.75:
+        return "has a few scratches"
+    elif percent >= 0.50:
+        return "is bleeding lightly"
+    elif percent >= 0.25:
+        return "looks badly wounded"
+    else:
+        return "is near death"

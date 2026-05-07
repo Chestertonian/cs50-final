@@ -164,3 +164,9 @@ May 6, 2026:
 - Custom movement costs.
 
 - Invisibility now functional
+
+- 'all' keyword for several commands
+
+- Looking at an NPC shows their health now (very helpful for combat, e.g.)
+
+- Fixed spawning bug similar to previous one for NPCs

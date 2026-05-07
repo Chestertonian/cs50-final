@@ -1,0 +1,13 @@
+Syntax: 
+
+'cataclysm <target>'
+
+------------------------------------
+
+Cataclysm is a devastating spell that unleashes the most terrifying elemental energies of creation on a single target. It affects one enemy and deals extremely high damage.
+
+As it consumes a massive amount of SP, it is not intended for frequent use. This spell represents one of the most powerful known applications of raw arcane energy.
+
+Use of this spell can decisively end battles, but improper use may leave the caster vulnerable afterward, even turning on the caster to injure them.
+
+Related files: help meteorstorm, help greaterfireball, help spells, help combat.

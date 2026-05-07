@@ -183,7 +183,7 @@ class GameEngine:
                 ).fetchone()
                 if not target:
                     return f"You don't see '{target_name}' here."
-                self.player.combat.start_combat(target["id"])
+                self.player.combat.start_combat(target["id"], self.player)
 
             result = skill.execute(self.player, target, self.db)
             self.player.save(self.db)
