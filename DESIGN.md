@@ -1,7 +1,7 @@
 # Design Document
 
 ## Overview
-Wayfarer is an old-school text-based adventure game (a bit like [Zork]([https://www.en.wikipedia.org/](https://en.wikipedia.org/wiki/Zork))), based on the classic tropes of fantasy: dragons, fireballs, caves, wizards, goblins. The basic goal of the project was to create a playable game -- one without a defined outcome, but hopefully with a lot of adventure to be had. 
+Wayfarer is an old-school text-based adventure game, a bit like [Zork](https://en.wikipedia.org/wiki/Zork), based on the classic tropes of fantasy: dragons, fireballs, caves, wizards, goblins. The basic goal of the project was to create a playable game -- one without a defined outcome, but hopefully with a lot of adventure to be had. 
 
 ## Motivation
 Why you built it. What problem it solves or what inspired it.
