@@ -7,43 +7,34 @@ Wayfarer is an old-school text-based adventure game, a bit like [Zork](https://e
 I wanted to build a project that I would enjoy working on, and definitely succeeded in that! I also wanted to have a project that would be very easy to add features to if I wanted to -- there wasn't a single defined outcome. Also, it didn't involve doing a lot of frontend work, which I wasn't excited about doing.
 
 ## Architecture
-High-level structure of the system.
+The engine (engine.py) is the heart of the game. It holds the player object, the database connection, and a dictionary mapping command strings to command objects. Each iteration it reads a line, splits off the verb, looks it up in that dictionary, and calls .execute(player, db, args).
 
-- Major components (e.g., client, server, database, engine)
-- How they interact
-- Any important design patterns
+The database is the 'world.' There's no in-memory persistent game world to speak of — rooms, items, NPCs, exits all live in SQLite and are queried as needed. This means the world persists automatically. The tradeoff to this, of course, is that almost every action touches the database. I tried to minimize this by using object-oriented programming -- Python classes with a lot of methods -- to keep raw SQL as limited as possible.
 
-(Optional diagram)
+Models (models.py) are a object layer over the DB rows. They give, for example, "player.health" instead of just getting things from the rows, and methods like item.equip(slot) instead of raw SQL in the command files (except for when I forgot).
+
+Commands (under commands/) are self-contained classes, one per every file, all inheriting from base.py (base command structure). Each implements a single 'execute' method. The engine doesn't "know"  what a command does. The engine just calls execute and prints the return value. This means adding new commands does not require touching the engine.
+
+Combat (combat/) is split into two main pieces. CombatState is an object that tracks who the player is fighting. It's in memory, not SQL. Combat_loop.py contains the round logic: player attacks, monster counterattacks, damage is calculated, death is handled, etc.
+
+The spawner (spawner.py) spawns from the item_spawns and npc_spawns tables in SQL, creating new instances from templates.
+
 
 ## Data Model / Schema
-Explain your database or data structures.
+The core distinctive of the way I handled data is this: almost everything in the world is an instance of a template. For example, Threna the barkeeper, the NPC in the tavern, is actually an instance of a template. This might seem like overkill in this case, but consider the following case.
 
-- Tables / models
-- Key fields
-- Relationships
-- Why this structure was chosen
+Presumably, the game will have a lot of goblins, since there's a goblin lair. If I need to create an entirely new "idea" of a goblin every time I spawn one, that ends up being a hassle -- plus it causes problems, like if I want to edit how much damage goblins in general do. If I have a template for a goblin and individual instances (think of the idea of a goblin vs individual goblins running around), this makes that entire thing much, much easier. So for NPCs (monsters like goblins), I have 
+- npc_templates, containing things like the maximum health, what it looks like, if it's aggressive.
+- npc_instances, containing things like the current health of an instance or its location
+- and npc_spawns, containing the "rules" for where NPCs are spawned.
+
+I have a very similar system for items, with the added wrinkle that there are different types of items (armor, weapons, food, etc), so I used the primary key idea for that.
+
+The world is made of rooms and exits -- both of these are pretty simple.
+
 
 ## Core Features
-Break down major functionality.
-
-### Feature 1 (e.g., Authentication System)
-- How it works
-- Key files/functions involved
-
-### Feature 2 (e.g., Combat System)
-- Mechanics
-- Flow of execution
-
-(Repeat as needed)
-
-## Game / Application Flow
-Describe how a user interacts step-by-step.
-
-Example:
-1. User logs in
-2. Enters world
-3. Moves / interacts
-4. System processes ticks/combat/events
+The best way to experience the core features is to try playing the game! Create a character (wizard is best), find the abandoned house and its secret room, take the armor from it, wear it, and go fight deer. Or fight deer without armor. Or try to find the dragon. You'll die.
 
 ## Key Design Decisions
 Important tradeoffs or architecture choices.
@@ -70,7 +61,13 @@ Brief explanation of important files.
 What was difficult and how you solved it.
 
 ## Future Improvements
-What you would add or improve with more time.
+I definitely want to work on this more, and make it a more enjoyable game.
+*I want to add*
+- The other classes (rogue, warrior, cleric, and ranger.) I think this will be much easier to do now that I have one fully working class.
+- NPCs that drop items on death.
+- Working food, lighting system.
+- Working economic system.
+- More areas. (There's actually about 30 unreachable rooms in the game now that I just didn't have time to add exits for :( )
 
 
 ## Outcomes Reached
@@ -80,12 +77,8 @@ In terms of best outcomes, I created health/movement points and combat. I actual
 
 Overall, I achieved all of the goals that I wanted to.
 
-- New systems
-- Refactoring ideas
-- Scalability improvements
-
-## Acknowledgments
-Any resources, libraries, or inspiration.
+## AI Use Note
+I used AI fairly extensively in my workflow, specifically Claude Sonnet 4.6. Its project prompt was "I'm working on my CS50 final project -- creating a small single player MUD-type game in Python, using sqlite3 to deal with rooms, objects, exits, etc." It also had access to my schemas and file tree. Overall, it was very helpful, although it did make some notable mistakes, and want to add some absolutely unnecessary safety checks at random points. Without it, though, I definitely would not have ended up with 4000+ lines of code!
 
 ## Project Structure
 
